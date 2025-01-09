@@ -1,180 +1,156 @@
-import { useEffect, useState } from "react";
-import Chart from "react-apexcharts";
-import { ApexOptions } from "apexcharts";
-
-import {
-  fetchClientCountsByDate,
-  fetchPaymentCounts,
-  getClientDue,
-} from "../services/Reports";
-import { calculateDaysBetweenDates, formatDate } from "../utils/common";
+import { FaLock, FaUnlock } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export function HomePage() {
-  const [datosPayment, setDatosPayment] = useState<any>();
-  const [clientDueData, setClientDueData] = useState<any[]>([]);
-  const [clientCountsByMonth, setClientCountsByMonth] = useState<any[]>([]);
+  const navigate = useNavigate();
 
-  //---------------------------------------------------------------- GET DATA
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const paymentCountResponse = await fetchPaymentCounts();
-
-        setDatosPayment(paymentCountResponse);
-        const clientDueResponse = await getClientDue();
-
-        if (clientDueResponse.success) {
-          setClientDueData(clientDueResponse.data);
-        }
-
-        const clientCountsResponse = await fetchClientCountsByDate();
-        if (clientCountsResponse) {
-          setClientCountsByMonth(clientCountsResponse);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  //---------------------------------------------------------------- GRAFIC
-  const meses = [
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Setiembre",
-    "Octubre",
-    "Nobiembre",
-    "Diciembre",
+  const events = [
+    {
+      id: 1,
+      name: "Conferencia de Tecnología",
+      startDate: "2025-02-20",
+      time: "10:00 AM",
+      location: "Auditorio Principal",
+      description:
+        "Una conferencia sobre las últimas tendencias en tecnología y desarrollo.",
+      image:
+        "https://asesoriaentesis.edu.pe/wp-content/uploads/2023/11/1500x844-tesis-terminar-maestria.jpg",
+      isPrivate: false,
+    },
+    {
+      id: 2,
+      name: "Feria de Empleo",
+      startDate: "2025-03-10",
+      time: "11:00 AM",
+      location: "Centro de Convenciones",
+      description:
+        "Oportunidades laborales para jóvenes profesionales y estudiantes.",
+      image:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlkjVx5p1lg4DAiBvYaFNMSpdee3wBDbcxN6VpytkBybKySu8i8GbKUyIhFw0srUPNpVU",
+      isPrivate: true,
+    },
+    {
+      id: 3,
+      name: "Workshop de Marketing ",
+      startDate: "2025-04-05",
+      time: "02:00 PM",
+      location: "Sala de Conferencias A",
+      description:
+        "Un taller práctico sobre estrategias de marketing digital y SEO.",
+      image:
+        "https://www.revistaeyn.com/binrepository/1200x806/0c0/0d0/none/26086/UCYG/deportestodos_6294117_20231218170022.jpg",
+      isPrivate: false,
+    },
+    {
+      id: 4,
+      name: "Ciclo de Innovación",
+      startDate: "2025-05-15",
+      time: "09:00 AM",
+      location: "Auditorio Norte",
+      description: "Charlas inspiradoras sobre las últimas innovaciones..",
+      image:
+        "https://alianzaestudiantil.org/wp-content/uploads/2022/03/conferencias-para-profesionales.jpg",
+      isPrivate: true,
+    },
+    {
+      id: 5,
+      name: "Networking ",
+      startDate: "2025-06-01",
+      time: "03:00 PM",
+      location: "Lobby del Hotel",
+      description: "Evento de networking para emprendedores y startups.",
+      image:
+        "https://eventoociomadrid.com/wp-content/uploads/2022/01/Team-Building-las-mejores-actividades.jpg",
+      isPrivate: false,
+    },
   ];
 
-  const clientDataByMonth = meses.map((_, index) => {
-    const dataForMonth = clientCountsByMonth.find(
-      (item) => new Date(item.month).getMonth() === index
-    );
-    return dataForMonth ? parseInt(dataForMonth.count) : 0;
-  });
-
-  const dataMultiLinea = {
-    series: [
-      {
-        name: "Clientes",
-        data: clientDataByMonth,
-      },
-    ],
-    options: {
-      chart: {
-        type: "line",
-      },
-      xaxis: {
-        categories: meses,
-      },
-      legend: {
-        position: "top",
-      },
-    } as ApexOptions,
+  const handleCardClick = (id: number) => {
+    navigate(`/detail-event/${id}`);
   };
+  
 
   return (
     <div className="page-wrapper">
       <div className="page-content">
-        <div className="row row-cols-1 row-cols-md-2 row-cols-xl-4">
-          <div className="col">
-            <div className="card radius-10 border-start border-0 border-4 border-info">
-              <div className="card-body">
-                <div className="d-flex align-items-center">
-                  <div>
-                    <p className="mb-0 text-secondary">Total de ventas</p>
-                    <h4 className="my-1 text-info">
-                      {datosPayment ? datosPayment.paymentCount : "0"}
-                    </h4>
-                  </div>
-                  <div className="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto">
-                    <i className="bx bxs-cart" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col">
-            <div className="card radius-10 border-start border-0 border-4 border-danger">
-              <div className="card-body">
-                <div className="d-flex align-items-center">
-                  <div>
-                    <p className="mb-0 text-secondary">Ingresos (Membresias)</p>
-                    <h4 className="my-1 text-danger">
-                      S/{datosPayment ? datosPayment.totalRevenue : "0"}
-                    </h4>
-                  </div>
-                  <div className="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto">
-                    <i className="bx bxs-wallet" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col">
-            <div className="card radius-10 border-start border-0 border-4 border-success">
-              <div className="card-body">
-                <div className="d-flex align-items-center">
-                  <div>
-                    <p className="mb-0 text-secondary">Productos totales</p>
-                    <h4 className="my-1 text-success">
-                      {datosPayment ? datosPayment.productCount : "0"}
-                    </h4>
-                  </div>
-                  <div className="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto">
-                    <i className="bx bxs-bar-chart-alt-2" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col">
-            <div className="card radius-10 border-start border-0 border-4 border-warning">
-              <div className="card-body">
-                <div className="d-flex align-items-center">
-                  <div>
-                    <p className="mb-0 text-secondary">Total de clientes</p>
-                    <h4 className="my-1 text-warning">
-                      {datosPayment ? datosPayment.clientCount : "0"}
-                    </h4>
-                  </div>
-                  <div className="widgets-icons-2 rounded-circle bg-gradient-orange text-white ms-auto">
-                    <i className="bx bxs-group" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <h6 className="mb-0 text-uppercase">Listado de eventos</h6>
+        <hr />
         <div className="row">
-          <div className="col-12 d-flex">
-            <div className="card radius-10 w-100">
-              <div className="card-header">
-                <div className="d-flex align-items-center">
-                  <div>
-                    <h6 className="mb-0">Clientes</h6>
+          {events.map((event) => (
+            <div
+              key={event.id}
+              className="col-md-3 mb-4"
+              onMouseEnter={(e) => {
+       
+                e.currentTarget.style.transform = "scale(1.05)";
+              }}
+              onMouseLeave={(e) => {
+            
+                e.currentTarget.style.transform = "scale(1)";
+              }}
+              onClick={() => handleCardClick(event.id)}
+              style={{ cursor: "pointer" }}
+            >
+              <div className="card border-primary border-bottom border-3 border-0">
+                <img
+                  src={event.image}
+                  className="card-img-top"
+                  alt={event.name}
+                  style={{ height: "180px", objectFit: "cover" }}
+                />
+                <div className="card-body d-flex flex-column">
+                  <h5
+                    className="card-title text-center mb-3"
+                    style={{
+                      borderBottom: "1px solid #ddd",
+                      paddingBottom: "10px",
+                      maxHeight: "100px",
+                      overflowY: "auto",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    {event.name}
+                  </h5>
+                  <div className="d-flex justify-content-between">
+                    <p className="m-0">
+                      <strong>Fecha:</strong> {event.startDate}
+                    </p>
+                    <small className="text-muted">{event.time}</small>
+                  </div>
+
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <p className="card-text mb-0">
+                      <strong>Ubicación:</strong> {event.location}
+                    </p>
+                    <small className="text-muted d-flex align-items-center mb-0">
+                      {event.isPrivate ? (
+                        <span>
+                          <FaLock style={{ marginRight: "5px" }} />
+                        </span>
+                      ) : (
+                        <span>
+                          <FaUnlock style={{ marginRight: "5px" }} />
+                        </span>
+                      )}
+                    </small>
+                  </div>
+
+                  <div
+                    className="card-text text-justify"
+                    style={{
+                      borderTop: "1px solid #ddd",
+                      paddingTop: "10px",
+                      maxHeight: "100px",
+                      overflowY: "auto",
+                      marginTop: "10px",
+                    }}
+                  >
+                    <p>{event.description}</p>
                   </div>
                 </div>
               </div>
-              <div className="card-body">
-                <Chart
-                  options={dataMultiLinea.options}
-                  series={dataMultiLinea.series}
-                  type="line"
-                  height={350}
-                />
-              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

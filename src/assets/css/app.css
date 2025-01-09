@@ -22,7 +22,7 @@ body {
 
 	letter-spacing: .5px;
 
-	background: #f7f7ff;
+	background: #EAF1F7;
 
 	overflow-x: hidden;
 
@@ -1266,7 +1266,7 @@ a {
 
 	display: flex;
 
-	background-color: #f7f7ff;
+	background-color: #EAF1F7;
 
 	min-height: 100vh;
 
@@ -3140,7 +3140,7 @@ form select.error:focus {
 
 .bg-body {
 
-	background-color: #f7f7ff!important;
+	background-color: #EAF1F7!important;
 
 }
 
@@ -4917,7 +4917,7 @@ input::placeholder {
 	
 	cursor: pointer;
 
-    background-color: #f7f7ff;
+    background-color: #EAF1F7;
 
 	border: 0;
 

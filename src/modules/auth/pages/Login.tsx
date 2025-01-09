@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 import { useAuth } from "../../../hooks/AuthContext";
-import { login } from "../../../services/Login";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -15,37 +14,41 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   //---------------------------------------------------------------- POST LOGIN
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await login({
-        UserName: username,
-        Password: password,
-      });
-      if (!response.success) {
-        Swal.fire({
-          title: "Error!",
-          text: response.msg,
-          icon: "error",
-          confirmButtonText: "Aceptar",
-        });
-      } else {
-        if (response.data.RoleId == 1 || response.data.RoleId == 2) {
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: `Bienvenido ${response.data.FirstName}`,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          setUser(response.data);
-          navigate("/");
-        }
-      }
-    } catch (error) {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!username || !password) {
       Swal.fire({
-        title: "Error!",
-        text: "Oppss, algo salio mal!",
+        title: "Datos incompletos",
+        text: "Por favor, ingresa un usuario y una contraseña.",
+        icon: "warning",
+        confirmButtonText: "Aceptar",
+      });
+      return;
+    }
+
+    if (username === "admin" && password === "12345678") {
+      const response = {
+        data: {
+          FirstName: "Jhair",
+          LastName: "Arone Angeles",
+          UserType: true,
+        },
+      };
+      const data = response.data;
+      setUser(data);
+      navigate("/");
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: `Bienvenido ${response.data.FirstName}`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } else {
+      Swal.fire({
+        title: "Algo salió mal!",
+        text: "Usuario o contraseña incorrecta",
         icon: "error",
         confirmButtonText: "Aceptar",
       });

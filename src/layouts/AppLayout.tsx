@@ -59,7 +59,7 @@ function AppLayout() {
             </div>
             <div>
               <h4 className="logo-text" style={{ fontWeight: "bold" }}>
-                UNAMBA
+                EVENTOS
               </h4>
             </div>
             <div className="toggle-icon ms-auto">
@@ -80,35 +80,48 @@ function AppLayout() {
             <li>
               <a className="has-arrow" href="#">
                 <div className="parent-icon">
-                  <i className="bx bx-basket" />
+                  <i className="bx bx-calendar-event" />
                 </div>
                 <div className="menu-title">Eventos</div>
               </a>
 
               <ul>
                 <li>
-                  <NavLink to="/area/products/">
-                    <i className="bx bx-radio-circle" />
-                    Eventos
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/area/new-product/">
+                  <NavLink to="/new-event/">
                     <i className="bx bx-radio-circle" />
                     Crear Evento
                   </NavLink>
                 </li>
+                <li>
+                  <NavLink to="/attendance-event">
+                    <i className="bx bx-radio-circle" />
+                    Asistencias
+                  </NavLink>
+                </li>
               </ul>
             </li>
+            <li className="menu-label">Gestion de Usuarios</li>
             <li>
               <a className="has-arrow" href="#">
                 <div className="parent-icon">
-                  <i className="bx bx-user-circle" />
+                  <i className="bx bx-user-voice" />
                 </div>
                 <div className="menu-title">Docentes</div>
               </a>
 
               <ul>
+                <li>
+                  <NavLink to="/new-teacher/">
+                    <i className="bx bx-radio-circle" />
+                    Crear Docente
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/teacher/">
+                    <i className="bx bx-radio-circle" />
+                    Docentes
+                  </NavLink>
+                </li>
                 <li>
                   <NavLink to="/area/clients/">
                     <i className="bx bx-radio-circle" />
@@ -123,9 +136,32 @@ function AppLayout() {
                 </li>
               </ul>
             </li>
+            <li>
+              <a className="has-arrow" href="#">
+                <div className="parent-icon">
+                  <i className="bx bx-user" />
+                </div>
+                <div className="menu-title">Estudiantes</div>
+              </a>
+
+              <ul>
+                <li>
+                  <NavLink to="/new-student/">
+                    <i className="bx bx-radio-circle" />
+                    Crear Estudiante
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/student/">
+                    <i className="bx bx-radio-circle" />
+                    Estudiante
+                  </NavLink>
+                </li>
+              </ul>
+            </li>
             <li className="menu-label">Informes &amp; Gráficos</li>
             <li>
-              <NavLink to="/area/reports-table/">
+              <NavLink to="/reports/">
                 <div className="parent-icon">
                   <i className="bx bx-table" />
                 </div>
@@ -170,10 +206,8 @@ function AppLayout() {
                     alt="user avatar"
                   />
                   <div className="user-info">
-                    <p className="user-name mb-0">{user?.UserName}</p>
-                    <p className="designattion mb-0">
-                      {user?.RoleId === 1 ? "ADMINISTRADOR" : "USUARIO"}
-                    </p>
+                    <p className="user-name mb-0">{user?.FirstName}</p>
+                    <p className="designattion mb-0">USUARIO</p>
                   </div>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-end">

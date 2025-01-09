@@ -1,14 +1,15 @@
 import AppLayout from "../layouts/AppLayout";
 import { Navigate } from "react-router-dom";
-import ProtectedRoute from "../components/ProtectedRoute ";
 import { HomePage } from "../pages/Home";
-import { Clients } from "../modules/clientes/Clients";
-import { NewClient } from "../modules/clientes/NewClient";
-import { Products } from "../modules/products/Products";
-import { NewProduct } from "../modules/products/NewProduct";
-import { DetailProduct } from "../modules/products/DetailProduct";
+import { Teacher } from "../modules/teacher/Teacher";
+import { NewTeacher } from "../modules/teacher/NewTeacher";
 import { Reports } from "../modules/reports/Reports";
 import { ReportsTable } from "../modules/reports/ReportsTable";
+import { NewEvent } from "../modules/events/NewEvent";
+import DetailEvent from "../modules/events/DetailEvent";
+import { NewStudent } from "../modules/student/NewStudent";
+import { Student } from "../modules/student/Student";
+import {EventAttendance} from "../modules/attendance/EventAttendance";
 
 
 const appRouter = [
@@ -24,33 +25,45 @@ const appRouter = [
         path: "/",
         element: <HomePage />,
       },
+      //Events
       {
-        path: "/area/products/",
-        element: <Products />,
+        path: "/new-event/",
+        element: <NewEvent />,
       },
       {
-        path: "/area/new-product/",
-        element: <NewProduct />,
+        path: "/detail-event/:id",
+        element: <DetailEvent />,
       },
       {
-        path: "/area/detail-product/:productId",
-        element: <DetailProduct />,
+        path: "/attendance-event",
+        element: <EventAttendance />,
+      },
+      //Teacher
+      {
+        path: "/teacher/",
+        element: <Teacher />,
       },
       {
-        path: "/area/clients/",
-        element: <Clients />,
+        path: "/new-teacher/",
+        element: <NewTeacher />,
+      },
+      //Student
+      {
+        path: "/student/",
+        element: <Student />,
       },
       {
-        path: "/area/new-client/",
-        element: <NewClient />,
+        path: "/new-student/",
+        element: <NewStudent />,
       },
+      //Reports
       {
-        path: "/area/reports/",
-        element: <Reports />,
-      },
-      {
-        path: "/area/reports-table/",
+        path: "/reports-table/",
         element: <ReportsTable />,
+      },
+      {
+        path: "/reports/",
+        element: <Reports />,
       },
       {
         path: "*",
