@@ -52,7 +52,7 @@ const AddParticipantsModal: React.FC<AddParticipantsModalProps> = ({
   const handleAddParticipant = async () => {
     if (!participant || !eventId ) return;
 
-    if( participant.idGuest != 2){
+    if( participant.role != 2){
       Swal.fire({
         icon: "error",
         title: "Error",
