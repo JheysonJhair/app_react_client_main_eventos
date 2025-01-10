@@ -4,7 +4,6 @@ import Swal from "sweetalert2";
 
 import { validateForm } from "../../utils/scheme/EventValidationsForm copy";
 import { createEvent } from "../../services/EventService";
-import AddParticipantsModal from "./components/AddParticipantsModal/AddParticipantsModal";
 
 export function NewEvent() {
   const navigate = useNavigate();
@@ -20,9 +19,6 @@ export function NewEvent() {
     eventTypeId: 0,
   });
 
-  const [showAddParticipantsModal, setShowAddParticipantsModal] =
-    useState(false);
-  const [eventId, setEventId] = useState<number | null>(null);
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -48,8 +44,6 @@ export function NewEvent() {
     try {
       const response = await createEvent(eventData);
       if (response.success) {
-        const createdEventId = response.data;
-        setEventId(createdEventId);
         Swal.fire({
           icon: "success",
           title: "¡Evento creado!",
@@ -57,21 +51,8 @@ export function NewEvent() {
           confirmButtonText: "Aceptar",
           position: "top-end",
           timer: 3000,
-        }).then(() => {
-          Swal.fire({
-            title: "¿Desea agregar participantes?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonText: "Sí",
-            cancelButtonText: "No",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              setShowAddParticipantsModal(true);
-            } else {
-              navigate("/");
-            }
-          });
         });
+        navigate("/");
       } else {
         Swal.fire({
           icon: "error",
@@ -301,11 +282,6 @@ export function NewEvent() {
           </div>
         </div>
       </div>
-      <AddParticipantsModal
-        show={showAddParticipantsModal}
-        onClose={() => setShowAddParticipantsModal(false)}
-        eventId={Number(eventId)}
-      />
     </div>
   );
 }

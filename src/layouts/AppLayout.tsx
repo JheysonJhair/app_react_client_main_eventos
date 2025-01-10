@@ -127,13 +127,13 @@ function AppLayout() {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/area/clients/">
+                  <NavLink to="/teachers-assistance/">
                     <i className="bx bx-radio-circle" />
                     Asistencias
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/area/new-client/">
+                  <NavLink to="/teachers-assistance/">
                     <i className="bx bx-radio-circle" />
                     Tomar Asistencia
                   </NavLink>

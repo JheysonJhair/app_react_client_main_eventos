@@ -222,11 +222,11 @@ export function DetailEvent() {
         eventId={id}
       />
 
-      {/* <AttendeesModal
+      <AttendeesModal
         show={showViewModal}
         onClose={handleCloseViewModal}
         attendees={attendanceData}
-      /> */}
+      />
     </div>
   );
 }
