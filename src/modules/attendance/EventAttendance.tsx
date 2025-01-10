@@ -19,22 +19,11 @@ interface Payment {
   EndDate: string;
   PaymentType: string;
 }
-interface Product {
-  Responsable: string;
-  Fechaventa: string;
-  Producto: string;
-  Precio: any;
-  Descripcion: string;
-  Cantidad: number;
-  Formapago: string;
-}
+
 
 export function EventAttendance() {
-
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
-
-
 
   const [paymentData, setPaymentData] = useState<Payment[]>([]);
 
@@ -46,12 +35,10 @@ export function EventAttendance() {
         fechaFin
       );
       if (data.success) {
-      
       }
 
       const data2 = await fetchIncomeProductByDateRange(fechaInicio, fechaFin);
       if (data2.success) {
-       
       }
 
       const paymentDataResponse = await fetchPaymentByDateRange(
@@ -68,7 +55,6 @@ export function EventAttendance() {
       );
       console.log(productDataResponse);
       if (productDataResponse.success) {
- 
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -82,12 +68,10 @@ export function EventAttendance() {
     try {
       const data = await fetchIncomeMembershipByDateRange(today, today);
       if (data.success) {
-       
       }
 
       const data2 = await fetchIncomeProductByDateRange(today, today);
       if (data2.success) {
-
       }
 
       const paymentDataResponse = await fetchPaymentByDateRange(today, today);
@@ -97,7 +81,6 @@ export function EventAttendance() {
 
       const productDataResponse = await fetchProductByDateRange(today, today);
       if (productDataResponse.success) {
-
       }
 
       setFechaInicio(today);
@@ -110,8 +93,6 @@ export function EventAttendance() {
   useEffect(() => {
     handleTodayReport();
   }, []);
-
-
 
   return (
     <div className="page-wrapper">
@@ -134,7 +115,7 @@ export function EventAttendance() {
           </div>
         </div>
         <div className="row mb-3">
-          <div className="col-md-5">
+          <div className="col-md-3">
             <input
               type="date"
               className="form-control"
@@ -142,7 +123,7 @@ export function EventAttendance() {
               onChange={(e) => setFechaInicio(e.target.value)}
             />
           </div>
-          <div className="col-md-5">
+          <div className="col-md-3">
             <input
               type="date"
               className="form-control"
@@ -150,12 +131,13 @@ export function EventAttendance() {
               onChange={(e) => setFechaFin(e.target.value)}
             />
           </div>
-          <div className="col-md-2">
+          <div className="col-md-6 d-flex justify-content-end">
             <button className="btn btn-primary" onClick={handleFetchData}>
               Obtener Datos
             </button>
           </div>
         </div>
+
         <div>
           <div className="card">
             <div className="card-body">
@@ -166,16 +148,14 @@ export function EventAttendance() {
                 >
                   <thead>
                     <tr>
-                      <th>Responsable</th>
-                      <th>Plan</th>
-                      <th>Cliente</th>
-                      <th>Celular</th>
-                      <th>Código</th>
-                      <th>Precio total</th>
-                      <th>Debe</th>
-                      <th>Fecha de inicio</th>
-                      <th>Fecha fin</th>
-                      <th>Forma de pago</th>
+                      <th>Evento</th>
+                      <th>Fecha</th>
+                      <th>Hora Inicio</th>
+                      <th>Hora Fin</th>
+                      <th>Tipo</th>
+                      <th>Estado</th>
+                      <th>Participante</th>
+                      <th>Asistentes</th>
                     </tr>
                   </thead>
                   <tbody>

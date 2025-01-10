@@ -1,12 +1,8 @@
 import { useEffect } from "react";
-import { Outlet } from "react-router-dom";
-import { NavLink } from "react-router-dom";
-
-import { useAuth } from "../hooks/AuthContext";
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
 
 function AppLayout() {
-  const { user } = useAuth();
-
+  const navigate = useNavigate();
   // ---------------------------------------------------------------- SCRIPTS
   useEffect(() => {
     const scriptPaths = [
@@ -45,6 +41,14 @@ function AppLayout() {
     loadScripts();
   }, []);
 
+    //---------------------------------------------------------------- HANDLE LOGOUT
+    const handleLogout = () => {
+      localStorage.removeItem("user");
+      localStorage.removeItem("isAuthenticated");
+      navigate("/login");
+    };
+  
+    
   return (
     <>
       <div className="wrapper">
@@ -154,7 +158,7 @@ function AppLayout() {
                 <li>
                   <NavLink to="/student/">
                     <i className="bx bx-radio-circle" />
-                    Estudiante
+                    Estudiantes
                   </NavLink>
                 </li>
               </ul>
@@ -206,8 +210,8 @@ function AppLayout() {
                     alt="user avatar"
                   />
                   <div className="user-info">
-                    <p className="user-name mb-0">{user?.FirstName}</p>
-                    <p className="designattion mb-0">USUARIO</p>
+                    <p className="user-name mb-0">DC EPIIS</p>
+                    <p className="designattion mb-0">ADMINISTRADOR</p>
                   </div>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-end">
@@ -215,6 +219,7 @@ function AppLayout() {
                     <a
                       className="dropdown-item d-flex align-items-center"
                       href="/"
+                      onClick={handleLogout}
                     >
                       <i className="bx bx-log-out-circle" />
                       <span>Cerrar sesión</span>

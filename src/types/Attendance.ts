@@ -1,6 +1,11 @@
+import { Participant } from "./Participant"
+
 export interface Attendance {
-  AttendanceId: number;
-  UserId: number; 
-  EventId: number; 
-  Timestamp: string; 
+  idAttendance: number
+  date: string,
+  isPresent: boolean,
+  eventId: number,
+  studentId: number,
+  teacherId: number
+  participant:Participant
 }

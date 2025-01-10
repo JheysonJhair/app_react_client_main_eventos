@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -12,6 +12,13 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   //---------------------------------------------------------------- POST LOGIN
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -30,18 +37,21 @@ export default function Login() {
     if (username === "admin" && password === "12345678") {
       const response = {
         data: {
-          FirstName: "Jhair",
-          LastName: "Arone Angeles",
-          UserType: true,
+          firstName: "Jhair",
+          lastName: "Arone Angeles",
+          role: 0,
+          isPresent: true,
         },
       };
+      localStorage.setItem("user", JSON.stringify(response.data));
+      localStorage.setItem("isAuthenticated", "true");
       const data = response.data;
       setUser(data);
       navigate("/");
       Swal.fire({
         position: "top-end",
         icon: "success",
-        title: `Bienvenido ${response.data.FirstName}`,
+        title: `Bienvenido ${response.data.firstName}`,
         showConfirmButton: false,
         timer: 1500,
       });

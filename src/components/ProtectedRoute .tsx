@@ -1,4 +1,3 @@
-import { useAuth } from "../hooks/AuthContext";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -7,16 +6,20 @@ interface Props {
 }
 
 const ProtectedRoute = ({ children }: Props) => {
-  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+
     if (!isAuthenticated) {
       navigate("/login");
     }
-  }, [isAuthenticated, history]);
+  }, [navigate]);
 
-  return isAuthenticated ? children : null;
+  return localStorage.getItem("isAuthenticated") === "true" ? (
+    <>{children}</>
+  ) : null;
 };
 
 export default ProtectedRoute;
+  

@@ -1,8 +1,14 @@
+import { Attendance } from "./Attendance";
 export interface Event {
-  EventId: number;
-  EventName: string;
-  Description: string;
-  StartDate: string; 
-  EndDate: string;   
-  Location: string;
+  idEvent: number;
+  name: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  location: string;
+  isPrivate: boolean;
+  description: string;
+  duration: string;
+  eventTypeId: number;
+  attendances?: Attendance[];
 }

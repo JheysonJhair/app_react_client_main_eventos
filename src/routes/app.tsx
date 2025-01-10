@@ -1,24 +1,24 @@
 import AppLayout from "../layouts/AppLayout";
 import { Navigate } from "react-router-dom";
 import { HomePage } from "../pages/Home";
-import { Teacher } from "../modules/teacher/Teacher";
+import { Teachers } from "../modules/teacher/Teacher";
 import { NewTeacher } from "../modules/teacher/NewTeacher";
 import { Reports } from "../modules/reports/Reports";
 import { ReportsTable } from "../modules/reports/ReportsTable";
 import { NewEvent } from "../modules/events/NewEvent";
 import DetailEvent from "../modules/events/DetailEvent";
 import { NewStudent } from "../modules/student/NewStudent";
-import { Student } from "../modules/student/Student";
-import {EventAttendance} from "../modules/attendance/EventAttendance";
-
+import { Students } from "../modules/student/Student";
+import { EventAttendance } from "../modules/attendance/EventAttendance";
+import ProtectedRoute from "../components/ProtectedRoute ";
 
 const appRouter = [
   {
     path: "/",
     element: (
-     // <ProtectedRoute>
+      <ProtectedRoute>
         <AppLayout />
-      //</ProtectedRoute>
+      </ProtectedRoute>
     ),
     children: [
       {
@@ -41,7 +41,7 @@ const appRouter = [
       //Teacher
       {
         path: "/teacher/",
-        element: <Teacher />,
+        element: <Teachers />,
       },
       {
         path: "/new-teacher/",
@@ -50,7 +50,7 @@ const appRouter = [
       //Student
       {
         path: "/student/",
-        element: <Student />,
+        element: <Students />,
       },
       {
         path: "/new-student/",

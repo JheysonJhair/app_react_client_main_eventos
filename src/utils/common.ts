@@ -3,14 +3,10 @@ export const formatDate = (isoDate: any) => {
   const [year, month, day] = date.toISOString().split('T')[0].split('-');
   return `${day}/${month}/${year}`;
 };
-
-
-export const calculateDaysBetweenDates = (
-  startDate: string,
-  endDate: string
-) => {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  const differenceInTime = end.getTime() - start.getTime();
-  return Math.ceil(differenceInTime / (1000 * 3600 * 24));
+export const formatTime = (isoDate: string): string => {
+  const date = new Date(isoDate);
+  const hours = date.getHours().toString().padStart(2, '0'); 
+  const minutes = date.getMinutes().toString().padStart(2, '0'); 
+  const seconds = date.getSeconds().toString().padStart(2, '0'); 
+  return `${hours}:${minutes}:${seconds}`;
 };

@@ -1,38 +1,63 @@
-import { FaLock } from "react-icons/fa";
-import { useState } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
-import { User } from "../../types/Usuario";
-import CustomClock from "../../components/ui/CustomClock";
-import { FaUserCircle } from "react-icons/fa";
-import { FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaLock, FaLockOpen } from "react-icons/fa";
+import { useParams } from "react-router-dom";
+import { Participant } from "../../types/Participant";
+import AddParticipantsModal from "./components/AddParticipantsModal/AddParticipantsModal";
+import AttendeesModal from "./components/AttendeesModal/AttendeesModal";
+import { Event } from "../../types/Events";
+import {
+  getEventById,
+  getPartipantEventById,
+} from "../../services/EventService";
+import { Loading } from "../../components/ui/Loading";
+import AttendanceModal from "./components/AttendanceModal/AttendanceModal";
+import { geAttendanceEventById } from "../../services/Attendance";
+import { Attendance } from "../../types/Attendance";
+
 export function DetailEvent() {
+  const { id } = useParams<{ id: string }>();
+
   const [showAttendanceModal, setShowAttendanceModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
+  const [showAddParticipantsModal, setShowAddParticipantsModal] =
+    useState(false);
   const handleOpenAttendanceModal = () => setShowAttendanceModal(true);
-  const handleCloseAttendanceModal = () => setShowAttendanceModal(false);
-
   const handleOpenViewModal = () => setShowViewModal(true);
   const handleCloseViewModal = () => setShowViewModal(false);
+  const handleOpenAddParticipantsModal = () =>
+    setShowAddParticipantsModal(true);
 
-  const [dni, setDni] = useState("");
-  const [userData, setUserData] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loadingSpinner, setLoadingSpinner] = useState(true);
 
-  const handleDniChange = (e: any) => {
-    setDni(e.target.value);
-  };
+  const [eventData, setEventData] = useState<Event | null>(null);
+  const [participantData, setParticipantData] = useState<Participant[]>([]);
+  const [attendanceData, setAttendanceData] = useState<Attendance[]>([]);
 
-  const handleCapture = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setUserData({
-        FirstName: "Juan Perez",
-        LastName: "Gomez",
-        UserType: true,
-      });
-      setLoading(false);
-      setTimeout(() => setUserData(null), 2000);
-    }, 2000);
+  //---------------------------------------------------------------- GET PARTICPANT AND EVENT
+  useEffect(() => {
+    const fetchEvent = async () => {
+      const event = await getEventById(Number(id));
+      setEventData(event);
+    };
+    const fetchParcipantEvent = async () => {
+      const participant = await getPartipantEventById(Number(id));
+      setParticipantData(participant);
+      setLoadingSpinner(false);
+    };
+    // const fetchAttendanceEvent = async () => {
+    //   const attendance = await geAttendanceEventById(Number(id));
+    //   setAttendanceData(attendance);
+    //   setLoadingSpinner(false);
+    // };
+    // fetchAttendanceEvent();
+    fetchParcipantEvent();
+    fetchEvent();
+  }, []);
+
+  const eventImages: { [key: number]: string } = {
+    0: "https://asesoriaentesis.edu.pe/wp-content/uploads/2023/11/1500x844-tesis-terminar-maestria.jpg",
+    1: "https://alianzaestudiantil.org/wp-content/uploads/2022/03/conferencias-para-profesionales.jpg",
+    2: "https://www.revistaeyn.com/binrepository/1200x806/0c0/0d0/none/26086/UCYG/deportestodos_6294117_20231218170022.jpg",
   };
 
   return (
@@ -59,30 +84,38 @@ export function DetailEvent() {
           <div className="row g-0">
             <div className="col-md-4 border-end">
               <img
-                src="https://asesoriaentesis.edu.pe/wp-content/uploads/2023/11/1500x844-tesis-terminar-maestria.jpg"
+                src={eventImages[eventData?.eventTypeId!]}
                 className="img-fluid"
                 alt="..."
               />
               <div className="row mb-3 row-cols-auto g-2 justify-content-center mt-3">
                 <div className="card-body d-flex flex-column">
-                  <div className="d-flex justify-content-between">
+                  <div className="d-flex justify-content-between mb-2">
                     <p className="m-0">
-                      <strong>Fecha:</strong> 2025-02-20
+                      <strong>Fecha:</strong> {eventData?.date}
                     </p>
-                    <small className="text-muted">10:00 AM</small>
+                    <small className="text-muted">{eventData?.startTime}</small>
                   </div>
 
                   <div className="d-flex justify-content-between align-items-center mb-2">
-                    <p className="card-text mb-0">
-                      <strong>Ubicación:</strong> Auditorio Principal
+                    <p className="card-text m-0">
+                      <strong>Ubicación:</strong> {eventData?.location}
                     </p>
                     <small className="text-muted d-flex align-items-center mb-0">
                       <span>
-                        <FaLock style={{ marginRight: "5px" }} />
+                        {eventData?.isPrivate ? (
+                          <FaLock style={{ marginRight: "5px" }} />
+                        ) : (
+                          <FaLockOpen style={{ marginRight: "5px" }} />
+                        )}
                       </span>
                     </small>
                   </div>
-
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <p className="card-text mb-1">
+                      <strong>Duración:</strong> {eventData?.duration} horas
+                    </p>
+                  </div>
                   <div
                     className="card-text text-justify"
                     style={{
@@ -93,18 +126,15 @@ export function DetailEvent() {
                       marginTop: "10px",
                     }}
                   >
-                    <p>
-                      Una conferencia sobre las últimas tendencias en tecnología
-                      y desarrollo.
-                    </p>
+                    <p>{eventData?.description}</p>
                   </div>
                 </div>
               </div>
             </div>
             <div className="col-md-8">
               <div className="card-body">
-                <h2 className="card-title">Conferencia de Tecnología</h2>
-                <div className="d-flex gap-3 py-3">
+                <h2 className="card-title">{eventData?.name}</h2>
+                <div className="gap-3">
                   <div className="cursor-pointer">
                     <i className="bx bxs-star text-warning"></i>
                     <i className="bx bxs-star text-warning"></i>
@@ -112,72 +142,67 @@ export function DetailEvent() {
                     <i className="bx bxs-star text-warning"></i>
                     <i className="bx bxs-star text-warning"></i>
                   </div>
-                  <div>12 Participantes</div>
+                  <div>{participantData.length} Participantes</div>
                 </div>
                 <hr />
                 <div className="row">
                   <div className="col-md-6">
-                    <h5>Docentes</h5>
+                    <h6 className="text-bold">NUEVOS INVITADOS</h6>
                     <ul
                       style={{
                         listStyleType: "none",
                         padding: 0,
-                        maxHeight: "250px",
+                        height: "250px",
                         overflowY: "auto",
                       }}
                     >
-                      {Array.from({ length: 6 }).map((_, index) => (
-                        <li
-                          key={`docente-${index}`}
-                          style={{
-                            borderBottom: "1px solid #ddd",
-                            padding: "5px 0",
-                          }}
-                        >
-                          Docente {index + 1}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="col-md-6">
-                    <h5>Estudiantes</h5>
-                    <ul
-                      style={{
-                        listStyleType: "none",
-                        padding: 0,
-                        maxHeight: "250px",
-                        overflowY: "auto",
-                      }}
-                    >
-                      {Array.from({ length: 7 }).map((_, index) => (
-                        <li
-                          key={`estudiante-${index}`}
-                          style={{
-                            borderBottom: "1px solid #ddd",
-                            padding: "5px 0",
-                          }}
-                        >
-                          Estudiante {index + 1}
-                        </li>
-                      ))}
+                      {loadingSpinner ? (
+                        <Loading />
+                      ) : (
+                        participantData
+                          .filter((participant) => participant.role === 0)
+                          .map((participant) => (
+                            <li
+                              key={participant.idTeacher}
+                              style={{
+                                borderBottom: "1px solid #ddd",
+                                padding: "5px 0",
+                              }}
+                            >
+                              {participant.firstName}{" "}
+                              {participant.lastName || "Sin apellido"}
+                            </li>
+                          ))
+                      )}
                     </ul>
                   </div>
                 </div>
+
                 <hr />
-                <div className="d-flex gap-3 mt-3">
+                <div className="d-flex justify-content-between mt-3">
                   <button
                     className="btn btn-primary"
                     onClick={handleOpenAttendanceModal}
                   >
                     Tomar Asistencia
                   </button>
-                  <button
-                    className="btn btn-outline-primary"
-                    onClick={handleOpenViewModal}
-                  >
-                    <span className="text">Ver Asistentes</span>{" "}
-                    <i className="bx bxs-user-circle"></i>
-                  </button>
+
+                  <div className="d-flex gap-3">
+                    <button
+                      className="btn btn-outline-primary"
+                      onClick={handleOpenViewModal}
+                    >
+                      <span className="text">Ver Asistentes</span>
+                      <i className="bx bxs-user"></i>
+                    </button>
+                    <button
+                      className="btn btn-outline-primary"
+                      onClick={handleOpenAddParticipantsModal}
+                    >
+                      <span className="text">Agregar Participantes</span>
+                      <i className="bx bxs-user"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -185,166 +210,23 @@ export function DetailEvent() {
         </div>
       </div>
 
-      <Modal
+      <AddParticipantsModal
+        show={showAddParticipantsModal}
+        onClose={() => setShowAddParticipantsModal(false)}
+        eventId={Number(id)}
+      />
+
+      <AttendanceModal
         show={showAttendanceModal}
-        onHide={handleCloseAttendanceModal}
-        size="lg"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Tomar Asistencia</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div
-              style={{
-                width: "40%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                background: "#EAF1F7",
-                marginRight: "10px",
-                marginLeft: "30px",
-              }}
-            >
-              <CustomClock />
-            </div>
-            <div
-              style={{
-                width: "60%",
-                paddingRight: "50px",
-                paddingLeft: "50px",
-              }}
-            >
-              <Form>
-                <Form.Group controlId="formDni">
-                  <Form.Label>Digite Identificación</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Ingrese DNI"
-                    value={dni}
-                    onChange={handleDniChange}
-                  />
-                </Form.Group>
-                <Button
-                  variant="primary"
-                  style={{ marginTop: "10px", width: "100%" }}
-                  onClick={handleCapture}
-                  disabled={loading}
-                >
-                  {loading ? "Buscando..." : "Capturar"}
-                </Button>
-              </Form>
+        onHide={() => setShowAttendanceModal(false)}
+        eventId={id}
+      />
 
-              <div
-                style={{
-                  marginTop: "20px",
-                  padding: "10px",
-                  border: "1px solid #ccc",
-                  borderRadius: "5px",
-                  background: "#f9f9f9",
-                  height: "200px",
-                }}
-              >
-                {userData && (
-                  <div className="text-center">
-                    <FaUserCircle
-                      style={{
-                        fontSize: "60px",
-                        color: "#58BD9F",
-                        borderRadius: "50%",
-                        marginBottom: "15px",
-                      }}
-                    />
-                    <p className="m-0">
-                      {userData.FirstName} {userData.LastName}
-                    </p>
-                    <p className="m-0 mb-1">
-                      <strong>Rol:</strong>{" "}
-                      {userData.UserType ? "Docente" : "Estudiante"}
-                    </p>
-
-                    <div
-                      style={{
-                        backgroundColor: "#58BD9F",
-                        color: "white",
-                        padding: "8px",
-                        borderRadius: "5px",
-                        marginLeft: "30px",
-                        marginRight: "30px",
-                      }}
-                    >
-                      <strong>Asistencia</strong>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseAttendanceModal}>
-            Cerrar
-          </Button>
-          <Button variant="primary">Confirmar</Button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal show={showViewModal} onHide={handleCloseViewModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Lista de Asistentes</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div style={{ maxHeight: "300px", overflowY: "auto" }}>
-            <ul className="list-group">
-              <li className="list-group-item d-flex align-items-center">
-                <FaChalkboardTeacher
-                  style={{
-                    fontSize: "20px",
-                    marginRight: "10px",
-                    color: "#007BFF",
-                  }}
-                />
-                <span>Kevin Arnold Arias Figueroa</span>
-                <span className="ms-auto text-muted">10:05 AM</span>
-              </li>
-              <li className="list-group-item d-flex align-items-center">
-                <FaUserGraduate
-                  style={{
-                    fontSize: "20px",
-                    marginRight: "10px",
-                    color: "#155A9A",
-                  }}
-                />
-                <span>Jheyson Jhair Arone Angeles</span>
-                <span className="ms-auto text-muted">10:07 AM</span>
-              </li>
-              <li className="list-group-item d-flex align-items-center">
-                <FaUserGraduate
-                  style={{
-                    fontSize: "20px",
-                    marginRight: "10px",
-                    color: "#348ADB",
-                  }}
-                />
-                <span>Ed Nativido Soto Humanahorcco</span>
-                <span className="ms-auto text-muted">10:12 AM</span>
-              </li>
-            </ul>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseViewModal}>
-            Cerrar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {/* <AttendeesModal
+        show={showViewModal}
+        onClose={handleCloseViewModal}
+        attendees={attendanceData}
+      /> */}
     </div>
   );
 }

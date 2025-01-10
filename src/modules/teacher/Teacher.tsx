@@ -1,32 +1,33 @@
 import { useState, useEffect } from "react";
-import { FaEdit, FaTrash } from "react-icons/fa";
-import Swal from "sweetalert2";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 
-import { User } from "../../types/Usuario";
+import { FaChevronLeft, FaChevronRight, FaEdit, FaTrash } from "react-icons/fa";
+import Swal from "sweetalert2";
 import {
   actualizarTeacher,
   eliminarTeacher,
-  obtenerTeacher,
+  getAllTeacher,
 } from "../../services/Teacher";
+import { Teacher } from "../../types/Teacher";
+import { validateForm } from "../../utils/scheme/TeacherValidationsForm";
+import { Loading } from "../../components/ui/Loading";
 
-export function Teacher() {
-  const [teacher, setTeacher] = useState<User[]>([]);
+export function Teachers() {
+  const [teacher, setTeacher] = useState<Teacher[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [teacherPerPage] = useState(9);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedTeacher, setSelectedTeacher] = useState<User | null>(null);
+  const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
+  const [formErrors, setFormErrors] = useState<any>({});
+  const [loading, setLoading] = useState(true); 
 
-  const indexOfLastCliente = currentPage * teacherPerPage;
-  const indexOfFirstCliente = indexOfLastCliente - teacherPerPage;
-  const currentTeacher = teacher.slice(
-    indexOfFirstCliente,
-    indexOfLastCliente
-  );
+  const indexOfLastTeacher = currentPage * teacherPerPage;
+  const indexOfFirstTeacher = indexOfLastTeacher - teacherPerPage;
+  const currentTeacher = teacher.slice(indexOfFirstTeacher, indexOfLastTeacher);
 
-  const totalPages = Math.ceil(teacher.length /teacherPerPage);
+  const totalPages = Math.ceil(teacher.length / teacherPerPage);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -38,17 +39,18 @@ export function Teacher() {
     )
   );
 
-  //---------------------------------------------------------------- GET CLIENT
+  //---------------------------------------------------------------- GET TEACHER
   useEffect(() => {
     const fetchData = async () => {
-      const data = await obtenerTeacher();
+      const data = await getAllTeacher();
       setTeacher(data);
+      setLoading(false); // Termina la carga cuando los datos se obtienen
     };
 
     fetchData();
   }, []);
 
-  //---------------------------------------------------------------- DELETE CLIENT
+  //---------------------------------------------------------------- DELETE TEACHER
   const handleDeleteTeacher = async (id: number) => {
     try {
       const confirmacion = await Swal.fire({
@@ -65,22 +67,22 @@ export function Teacher() {
       if (confirmacion.isConfirmed) {
         const response = await eliminarTeacher(id);
         if (!response.success) {
-          throw new Error(response.msg);
+          throw new Error(response.message);
         }
 
         const updatedTeacher = teacher.filter(
-          (teacher) => teacher.UserId !== id
+          (teacher) => teacher.idTeacher !== id
         );
         setTeacher(updatedTeacher);
-        await Swal.fire("¡Eliminado!", response.msg, "success");
+        await Swal.fire("¡Eliminado!", response.message, "success");
       }
     } catch (error) {
       Swal.fire("Error", "Oppss, algo salio mal!", "error");
     }
   };
 
-  //---------------------------------------------------------------- EDIT CLIENT
-  const handleEditTeacher = (teacher: User) => {
+  //---------------------------------------------------------------- EDIT TEACHER
+  const handleEditTeacher = (teacher: Teacher) => {
     setSelectedTeacher(teacher);
     setModalIsOpen(true);
   };
@@ -88,66 +90,52 @@ export function Teacher() {
   const closeModal = () => {
     setModalIsOpen(false);
     setSelectedTeacher(null);
+    setFormErrors({});
   };
 
   const saveChanges = async () => {
-    if (selectedTeacher && selectedTeacher.UserId !== undefined) {
-      const { FirstName, LastName } = selectedTeacher;
-      if (!FirstName?.trim() || !LastName?.trim() ) {
-        Swal.fire(
-          "Error",
-          "El campo nombre, apellidos, sexo  son obligatorio.",
-          "error"
-        );
+    if (selectedTeacher?.idTeacher) {
+      const errors = validateForm(selectedTeacher);
+      setFormErrors(errors);
+
+      if (Object.values(errors).some((error) => error !== "")) {
         return;
       }
+
       try {
         const response = await actualizarTeacher(
-          selectedTeacher.UserId,
+          selectedTeacher.idTeacher,
           selectedTeacher
         );
         if (!response.success) {
-          throw new Error(response.msg);
+          throw new Error(response.message);
         }
         setTeacher(
           teacher.map((user) =>
-            user.UserId === selectedTeacher.UserId ? selectedTeacher : user
+            user.idTeacher === selectedTeacher.idTeacher
+              ? selectedTeacher
+              : user
           )
         );
-        Swal.fire("Actualizado", response.msg, "success");
+        Swal.fire("Actualizado", response.message, "success");
       } catch (error) {
-        Swal.fire("Error", "Oppss, algo salio mal!", "error");
+        Swal.fire("Error", "Oppss, algo salió mal!", "error");
       }
     }
+
     setModalIsOpen(false);
     setSelectedTeacher(null);
+    setFormErrors({});
   };
 
   return (
     <div className="page-wrapper">
       <div className="page-content">
-        <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-          <div className="breadcrumb-title pe-3">Docentes</div>
-          <div className="ps-3">
-            <nav aria-label="breadcrumb">
-              <ol className="breadcrumb mb-0 p-0">
-                <li className="breadcrumb-item">
-                  <a href="#">
-                    <i className="bx bx-home-alt" />
-                  </a>
-                </li>
-                <li className="breadcrumb-item active" aria-current="page">
-                  Lista de docentes
-                </li>
-              </ol>
-            </nav>
-          </div>
-        </div>
         <div className="mb-3">
           <input
             type="text"
             className="form-control"
-            placeholder="Buscar cliente..."
+            placeholder="Buscar docente..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -156,79 +144,101 @@ export function Teacher() {
           className="table-responsive"
           style={{ maxHeight: "500px", overflowY: "auto" }}
         >
-          <table
-            id="example"
-            className="table table-striped table-bordered"
-            style={{ width: "100%" }}
-          >
-            <thead>
-              <tr>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredTeacher.map((teacher, index) => (
-                <tr key={index}>
-                  <td>{teacher.FirstName}</td>
-                  <td>{teacher.LastName}</td>
-                  <td>
-                    <button
-                      className="btn btn-primary btn-sm"
-                      style={{ marginRight: "6px" }}
-                      title="Editar"
-                      onClick={() => handleEditTeacher(teacher)}
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => handleDeleteTeacher(teacher.UserId || 0)}
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
+          {loading ? (
+            <Loading />
+          ) : filteredTeacher.length === 0 ? (
+            <div className="text-center">Sin docentes</div>
+          ) : (
+            <table
+              className="table table-striped table-bordered"
+              style={{ width: "100%" }}
+            >
+              <thead>
+                <tr>
+                  <th>DNI</th>
+                  <th>Nombres</th>
+                  <th>Apellidos</th>
+                  <th>Mail</th>
+                  <th>Telefono</th>
+                  <th>Género</th>
+                  <th>Acciones</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filteredTeacher.map((teacher, index) => (
+                  <tr key={index}>
+                    <td>{teacher.dni}</td>
+                    <td>{teacher.firstName}</td>
+                    <td>{teacher.lastName}</td>
+                    <td>{teacher.mail}</td>
+                    <td>{teacher.phone}</td>
+                    <td>{teacher.gender ? "Masculino" : "Femenino"}</td>
+                    <td>
+                      <button
+                        className="btn btn-primary btn-sm"
+                        style={{ marginRight: "6px" }}
+                        title="Editar"
+                        onClick={() => handleEditTeacher(teacher)}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() =>
+                          handleDeleteTeacher(teacher.idTeacher || 0)
+                        }
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
-        <ul className="pagination justify-content-center">
-          <li className={`page-item ${currentPage === 1 && "disabled"}`}>
-            <button
-              className="page-link"
-              onClick={() => paginate(currentPage - 1)}
-            >
-              Anterior
-            </button>
-          </li>
-          {Array.from({ length: totalPages }, (_, index) => (
-            <li
-              key={index}
-              className={`page-item ${currentPage === index + 1 && "active"}`}
-            >
-              <button onClick={() => paginate(index + 1)} className="page-link">
-                {index + 1}
+        {!loading && teacher.length > 0 && (
+          <ul className="pagination justify-content-center">
+            <li className={`page-item ${currentPage === 1 && "disabled"}`}>
+              <button
+                className="page-link"
+                onClick={() => paginate(currentPage - 1)}
+              >
+                <FaChevronLeft />
               </button>
             </li>
-          ))}
-          <li
-            className={`page-item ${currentPage === totalPages && "disabled"}`}
-          >
-            <button
-              className="page-link"
-              onClick={() => paginate(currentPage + 1)}
+            {Array.from({ length: totalPages }, (_, index) => (
+              <li
+                key={index}
+                className={`page-item ${currentPage === index + 1 && "active"}`}
+              >
+                <button
+                  onClick={() => paginate(index + 1)}
+                  className="page-link"
+                >
+                  {index + 1}
+                </button>
+              </li>
+            ))}
+            <li
+              className={`page-item ${
+                currentPage === totalPages && "disabled"
+              }`}
             >
-              Siguiente
-            </button>
-          </li>
-        </ul>
+              <button
+                className="page-link"
+                onClick={() => paginate(currentPage + 1)}
+              >
+                <FaChevronRight />
+              </button>
+            </li>
+          </ul>
+        )}
       </div>
 
-      {/* Modal para editar cliente */}
       <Modal show={modalIsOpen} onHide={closeModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Editar Cliente</Modal.Title>
+          <Modal.Title>Editar Docente</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedTeacher && (
@@ -243,19 +253,20 @@ export function Teacher() {
                       type="text"
                       className="form-control"
                       id="firstName"
-                      value={selectedTeacher.FirstName}
+                      value={selectedTeacher.firstName}
                       onChange={(e) =>
                         setSelectedTeacher({
                           ...selectedTeacher,
-                          FirstName: e.target.value,
+                          firstName: e.target.value,
                         })
                       }
-                      required
                     />
+                    {formErrors.firstName && (
+                      <small className="text-danger">
+                        {formErrors.firstName}
+                      </small>
+                    )}
                   </div>
-
-
-
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
@@ -266,29 +277,117 @@ export function Teacher() {
                       type="text"
                       className="form-control"
                       id="lastName"
-                      value={selectedTeacher.LastName}
+                      value={selectedTeacher.lastName}
                       onChange={(e) =>
                         setSelectedTeacher({
                           ...selectedTeacher,
-                          LastName: e.target.value,
+                          lastName: e.target.value,
                         })
                       }
-                      required
                     />
+                    {formErrors.lastName && (
+                      <small className="text-danger">
+                        {formErrors.lastName}
+                      </small>
+                    )}
                   </div>
+                </div>
+              </div>
 
+              <div className="mb-3">
+                <label htmlFor="dni" className="form-label">
+                  DNI <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="dni"
+                  value={selectedTeacher.dni}
+                  onChange={(e) =>
+                    setSelectedTeacher({
+                      ...selectedTeacher,
+                      dni: e.target.value,
+                    })
+                  }
+                />
+                {formErrors.dni && (
+                  <small className="text-danger">{formErrors.dni}</small>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label htmlFor="mail" className="form-label">
+                  Correo Electrónico
+                </label>
+                <input
+                  type="email"
+                  className="form-control"
+                  id="mail"
+                  value={selectedTeacher.mail}
+                  onChange={(e) =>
+                    setSelectedTeacher({
+                      ...selectedTeacher,
+                      mail: e.target.value,
+                    })
+                  }
+                />
+                {formErrors.mail && (
+                  <small className="text-danger">{formErrors.mail}</small>
+                )}
+              </div>
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="phone" className="form-label">
+                    Teléfono <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="phone"
+                    value={selectedTeacher.phone}
+                    onChange={(e) =>
+                      setSelectedTeacher({
+                        ...selectedTeacher,
+                        phone: e.target.value,
+                      })
+                    }
+                  />
+                  {formErrors.phone && (
+                    <small className="text-danger">{formErrors.phone}</small>
+                  )}
+                </div>
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="gender" className="form-label">
+                    Género <span className="text-danger">*</span>
+                  </label>
+                  <select
+                    id="gender"
+                    className="form-control"
+                    value={selectedTeacher.gender ? "Masculino" : "Femenino"}
+                    onChange={(e) =>
+                      setSelectedTeacher({
+                        ...selectedTeacher,
+                        gender: e.target.value === "Masculino",
+                      })
+                    }
+                  >
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                  </select>
+                  {formErrors.gender && (
+                    <small className="text-danger">{formErrors.gender}</small>
+                  )}{" "}
                 </div>
               </div>
             </form>
           )}
         </Modal.Body>
-
         <Modal.Footer>
           <Button variant="secondary" onClick={closeModal}>
-            Cancelar
+            Cerrar
           </Button>
           <Button variant="primary" onClick={saveChanges}>
-            Guardar cambios
+            Guardar Cambios
           </Button>
         </Modal.Footer>
       </Modal>
