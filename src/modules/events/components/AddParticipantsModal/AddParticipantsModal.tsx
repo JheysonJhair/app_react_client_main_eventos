@@ -50,11 +50,24 @@ const AddParticipantsModal: React.FC<AddParticipantsModalProps> = ({
 
   //---------------------------------------------------------------- POST PARTICIPANT
   const handleAddParticipant = async () => {
-    if (!participant || !eventId || !eventId) return;
+    if (!participant || !eventId ) return;
 
+    if( participant.idGuest != 2){
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Debes registrarte como invitado para continuar.",
+        confirmButtonText: "Aceptar",
+      });
+      return;
+    }
     setLoading(true);
     try {
-      const result = await addParticipantToEvent(eventId, participant.role, participant.idGuest!);
+      const result = await addParticipantToEvent(
+        eventId,
+        participant.role,
+        participant.idGuest!
+      );
 
       if (!result.success) {
         Swal.fire({
@@ -138,7 +151,11 @@ const AddParticipantsModal: React.FC<AddParticipantsModalProps> = ({
                 </p>
                 <p className="m-0 mb-1">
                   <strong>
-                    {participant.role === 0 ? "Docente" : "Estudiante"}
+                    {participant.role === 0
+                      ? "Docente"
+                      : participant.role === 1
+                      ? "Estudiante"
+                      : "Invitado"}
                   </strong>
                 </p>
               </div>

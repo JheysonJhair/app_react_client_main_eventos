@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
-import { FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa";
+import { FaChalkboardTeacher, FaUser, FaUserGraduate } from "react-icons/fa";
 import { formatTime } from "../../../../utils/common";
 import { AttendeesModalProps } from "./AttendeesModalt.ypes";
 
@@ -23,7 +23,7 @@ const AttendeesModal: React.FC<AttendeesModalProps> = ({
                 key={attendee.date}
                 className="list-group-item d-flex align-items-center"
               >
-                {attendee.role === 0 ? (
+                {attendee.role == 0 ? (
                   <FaChalkboardTeacher
                     style={{
                       fontSize: "20px",
@@ -31,12 +31,20 @@ const AttendeesModal: React.FC<AttendeesModalProps> = ({
                       color: "#007BFF",
                     }}
                   />
-                ) : (
+                ) : attendee.role == 1 ? (
                   <FaUserGraduate
                     style={{
                       fontSize: "20px",
                       marginRight: "10px",
                       color: "#155A9A",
+                    }}
+                  />
+                ) : (
+                  <FaUser
+                    style={{
+                      fontSize: "20px",
+                      marginRight: "10px",
+                      color: "#6C757D",
                     }}
                   />
                 )}

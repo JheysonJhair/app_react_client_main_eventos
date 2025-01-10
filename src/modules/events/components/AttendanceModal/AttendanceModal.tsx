@@ -205,7 +205,11 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
                   </p>
                   <p className="m-0 mb-1">
                     <strong>Rol:</strong>{" "}
-                    {userData.role === 0 ? "Docente" : "Estudiante"}
+                    {userData.role === 0
+                      ? "Docente"
+                      : userData.role === 1
+                      ? "Estudiante"
+                      : "Invitado"}
                   </p>
 
                   <div
