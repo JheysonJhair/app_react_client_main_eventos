@@ -11,8 +11,6 @@ import {
 } from "../../services/EventService";
 import { Loading } from "../../components/ui/Loading";
 import AttendanceModal from "./components/AttendanceModal/AttendanceModal";
-// import { geAttendanceEventById } from "../../services/Attendance";
-// import { Attendance } from "../../types/Attendance";
 import AddInvitedModal from "./components/AddInvitedModal/AddInvitedModal";
 
 export function DetailEvent() {
@@ -33,7 +31,6 @@ export function DetailEvent() {
 
   const [eventData, setEventData] = useState<Event | null>(null);
   const [participantData, setParticipantData] = useState<Participant[]>([]);
-  // const [attendanceData, setAttendanceData] = useState<Attendance[]>([]);
 
   //---------------------------------------------------------------- GET PARTICPANT AND EVENT
   useEffect(() => {
@@ -46,12 +43,7 @@ export function DetailEvent() {
       setParticipantData(participant);
       setLoadingSpinner(false);
     };
-    //  const fetchAttendanceEvent = async () => {
-    //    const attendance = await geAttendanceEventById(Number(id));
-    //    setAttendanceData(attendance);
-    //    setLoadingSpinner(false);
-    //  };
-    //  fetchAttendanceEvent();
+
     fetchParcipantEvent();
     fetchEvent();
   }, []);
@@ -144,7 +136,7 @@ export function DetailEvent() {
                     <i className="bx bxs-star text-warning"></i>
                     <i className="bx bxs-star text-warning"></i>
                   </div>
-                  <div>{participantData.length} Participantes</div>
+                  <div>{participantData.filter((participant) => participant.role === 2).length} Participantes invitados</div>
                 </div>
                 <hr />
                 <div className="row">
