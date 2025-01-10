@@ -13,19 +13,21 @@ import { Loading } from "../../components/ui/Loading";
 import AttendanceModal from "./components/AttendanceModal/AttendanceModal";
 import { geAttendanceEventById } from "../../services/Attendance";
 import { Attendance } from "../../types/Attendance";
+import AddInvitedModal from "./components/AddInvitedModal/AddInvitedModal";
 
 export function DetailEvent() {
   const { id } = useParams<{ id: string }>();
 
   const [showAttendanceModal, setShowAttendanceModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
-  const [showAddParticipantsModal, setShowAddParticipantsModal] =
-    useState(false);
+  const [showAddParticipantsModal, setShowAddParticipantsModal] = useState(false);
+  const [showAddInvitedModal, setShowAddInvitedModal] = useState(false);
+
   const handleOpenAttendanceModal = () => setShowAttendanceModal(true);
   const handleOpenViewModal = () => setShowViewModal(true);
   const handleCloseViewModal = () => setShowViewModal(false);
-  const handleOpenAddParticipantsModal = () =>
-    setShowAddParticipantsModal(true);
+  const handleOpenAddParticipantsModal = () =>setShowAddParticipantsModal(true);
+  const handleOpenAddInvitedModal = () => setShowAddInvitedModal(true);
 
   const [loadingSpinner, setLoadingSpinner] = useState(true);
 
@@ -146,7 +148,7 @@ export function DetailEvent() {
                 </div>
                 <hr />
                 <div className="row">
-                  <div className="col-md-6">
+                  <div className="col-md-12">
                     <h6 className="text-bold">NUEVOS INVITADOS</h6>
                     <ul
                       style={{
@@ -160,7 +162,6 @@ export function DetailEvent() {
                         <Loading />
                       ) : (
                         participantData
-                          .filter((participant) => participant.role === 0)
                           .map((participant) => (
                             <li
                               key={participant.idTeacher}
@@ -197,6 +198,13 @@ export function DetailEvent() {
                     </button>
                     <button
                       className="btn btn-outline-primary"
+                      onClick={handleOpenAddInvitedModal}
+                    >
+                      <span className="text">Agregar Invitado</span>
+                      <i className="bx bxs-user"></i>
+                    </button>
+                    <button
+                      className="btn btn-outline-primary"
                       onClick={handleOpenAddParticipantsModal}
                     >
                       <span className="text">Agregar Participantes</span>
@@ -209,6 +217,11 @@ export function DetailEvent() {
           </div>
         </div>
       </div>
+
+      <AddInvitedModal
+        show={showAddInvitedModal}
+        onClose={() => setShowAddInvitedModal(false)}
+      />
 
       <AddParticipantsModal
         show={showAddParticipantsModal}

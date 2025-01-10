@@ -15,6 +15,13 @@ export interface ParticipantAttendance {
   date?: string;
 }
 
+export interface Invitado {
+  id?: number;
+  firstName: string;
+  lastName: string;
+  mail: string;
+  dni: string;
+}
 export interface AuthContextType {
   user: ParticipantAttendance | null;
   setUser: (user: ParticipantAttendance | null) => void;

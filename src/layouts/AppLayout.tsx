@@ -41,14 +41,13 @@ function AppLayout() {
     loadScripts();
   }, []);
 
-    //---------------------------------------------------------------- HANDLE LOGOUT
-    const handleLogout = () => {
-      localStorage.removeItem("user");
-      localStorage.removeItem("isAuthenticated");
-      navigate("/login");
-    };
-  
-    
+  //---------------------------------------------------------------- HANDLE LOGOUT
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("isAuthenticated");
+    navigate("/login");
+  };
+
   return (
     <>
       <div className="wrapper">
@@ -143,7 +142,7 @@ function AppLayout() {
             <li>
               <a className="has-arrow" href="#">
                 <div className="parent-icon">
-                  <i className="bx bx-user" />
+                  <i className="bx bx-user-circle" />
                 </div>
                 <div className="menu-title">Estudiantes</div>
               </a>
@@ -159,6 +158,29 @@ function AppLayout() {
                   <NavLink to="/student/">
                     <i className="bx bx-radio-circle" />
                     Estudiantes
+                  </NavLink>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a className="has-arrow" href="#">
+                <div className="parent-icon">
+                  <i className="bx bx-user" />
+                </div>
+                <div className="menu-title">Invitados</div>
+              </a>
+
+              <ul>
+                <li>
+                  <NavLink to="/new-student/">
+                    <i className="bx bx-radio-circle" />
+                    Crear Invitado
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/student/">
+                    <i className="bx bx-radio-circle" />
+                    Invitados
                   </NavLink>
                 </li>
               </ul>

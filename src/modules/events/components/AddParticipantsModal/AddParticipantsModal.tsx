@@ -4,7 +4,10 @@ import Swal from "sweetalert2";
 
 import { AddParticipantsModalProps } from "./AddParticipantsModal.types";
 import { Participant } from "../../../../types/Participant";
-import { addParticipantToEvent } from "../../../../services/EventService";
+import {
+  addParticipantToEvent,
+  searchParticipantByDni,
+} from "../../../../services/EventService";
 import { FaUserCircle } from "react-icons/fa";
 
 const AddParticipantsModal: React.FC<AddParticipantsModalProps> = ({
@@ -16,13 +19,48 @@ const AddParticipantsModal: React.FC<AddParticipantsModalProps> = ({
   const [participant, setParticipant] = useState<Participant | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [id, setId] = useState(0);
+
+  //---------------------------------------------------------------- GET PARTICIPANT BY DNI
+  const handleSearchParticipant = async () => {
+    if (!dni) {
+      setError("El DNI es obligatorio.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    setParticipant(null);
+
+    try {
+      const result = await searchParticipantByDni(dni);
+
+      if (!result) {
+        setError("Participante no encontrado.");
+        return;
+      }
+      if (result.role == 0) {
+        setId(result.idTeacher);
+      } else {
+        setId(result.idStudent);
+      }
+      setParticipant(result);
+    } catch (err) {
+      setError(
+        "Error al buscar el participante. Por favor, intenta nuevamente."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   //---------------------------------------------------------------- POST PARTICIPANT
   const handleAddParticipant = async () => {
-    if (!participant) return;
+    if (!participant || !eventId) return;
+
     setLoading(true);
     try {
-      const result = await addParticipantToEvent(participant);
+      const result = await addParticipantToEvent(eventId, participant.role, id);
 
       if (!result.success) {
         Swal.fire({
@@ -40,6 +78,7 @@ const AddParticipantsModal: React.FC<AddParticipantsModalProps> = ({
         text: result.message,
         confirmButtonText: "Aceptar",
       });
+
       setLoading(false);
       onClose();
       window.location.reload();
@@ -73,40 +112,17 @@ const AddParticipantsModal: React.FC<AddParticipantsModalProps> = ({
             <Form.Label>Ingresar DNI</Form.Label>
             <Form.Control
               type="text"
-              placeholder="00000000"
-              value={dni}
-              onChange={(e) => setDni(e.target.value)}
-            />
-            <Form.Label style={{ marginTop: "10px" }}>Nombre</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Ingrese el Nombre"
-              value={dni}
-              onChange={(e) => setDni(e.target.value)}
-            />
-            <Form.Label style={{ marginTop: "10px" }}>Apellidos</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Ingrese apellidos"
-              value={dni}
-              onChange={(e) => setDni(e.target.value)}
-            />
-            <Form.Label style={{ marginTop: "10px" }}>
-              Correo Electrónico <span color="#ffffff">(Opcional)</span>
-            </Form.Label>
-            <Form.Control
-              type="mail"
-              placeholder="example@example.pe"
+              placeholder="Ingrese su DNI"
               value={dni}
               onChange={(e) => setDni(e.target.value)}
             />
             <Button
               variant="primary"
               style={{ marginTop: "20px", width: "100%" }}
-              onClick={handleAddParticipant}
+              onClick={handleSearchParticipant}
               disabled={loading || !dni}
             >
-              {loading ? "Agregando..." : "Agregar"}
+              {loading ? "Buscando..." : "Buscar"}
             </Button>
             {error && <p style={{ color: "red", marginTop: "5px" }}>{error}</p>}
           </Form.Group>
