@@ -210,7 +210,7 @@ function AppLayout() {
                     alt="user avatar"
                   />
                   <div className="user-info">
-                    <p className="user-name mb-0">DC EPIIS</p>
+                    <p className="user-name mb-0">D.C EPIIS</p>
                     <p className="designattion mb-0">ADMINISTRADOR</p>
                   </div>
                 </a>

@@ -41,10 +41,10 @@ export function HomePage() {
       <div className="page-content">
         <h6 className="mb-0 text-uppercase">Listado de eventos</h6>
         <hr />
-
+  
         {loading ? (
           <Loading />
-        ) : (
+        ) : events && events.length > 0 ? ( 
           <div className="row">
             {events.map((event) => (
               <div
@@ -85,7 +85,7 @@ export function HomePage() {
                       </p>
                       <small className="text-muted">{event.startTime}</small>
                     </div>
-
+  
                     <div className="d-flex justify-content-between align-items-center mb-2">
                       <p className="card-text mb-0">
                         <strong>Ubicación:</strong> {event.location}
@@ -102,7 +102,7 @@ export function HomePage() {
                         )}
                       </small>
                     </div>
-
+  
                     <div
                       className="card-text text-justify"
                       style={{
@@ -120,8 +120,13 @@ export function HomePage() {
               </div>
             ))}
           </div>
+        ) : (
+          <div className="text-center mt-4">
+            <p>No hay eventos disponibles.</p>
+          </div>
         )}
       </div>
     </div>
   );
+  
 }

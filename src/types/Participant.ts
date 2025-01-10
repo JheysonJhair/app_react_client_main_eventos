@@ -16,6 +16,6 @@ export interface ParticipantAttendance {
 }
 
 export interface AuthContextType {
-  user: Participant | null;
-  setUser: (user: Participant | null) => void;
+  user: ParticipantAttendance | null;
+  setUser: (user: ParticipantAttendance | null) => void;
 }

@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { Participant, AuthContextType } from "../types/Participant";
+import { AuthContextType, ParticipantAttendance } from "../types/Participant";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<Participant | null>(null);
+  const [user, setUser] = useState<ParticipantAttendance | null>(null);
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
