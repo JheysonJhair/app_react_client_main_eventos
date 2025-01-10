@@ -1,7 +1,7 @@
-import { Attendance } from "../../../../types/Attendance";
+import { Participant } from "../../../../types/Participant";
 
 export interface AttendeesModalProps {
   show: boolean;
   onClose: () => void;
-  attendees: Attendance[];
+  attendees: Participant[];
 }

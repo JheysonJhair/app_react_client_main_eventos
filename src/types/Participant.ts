@@ -4,6 +4,7 @@ export interface Participant {
   firstName: string;
   lastName: string;
   role: number;
+  idGuest?: number;
   isPresent?: boolean;
   date?: string;
 }

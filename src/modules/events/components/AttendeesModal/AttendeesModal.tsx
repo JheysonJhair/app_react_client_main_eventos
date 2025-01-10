@@ -20,10 +20,10 @@ const AttendeesModal: React.FC<AttendeesModalProps> = ({
           <ul className="list-group">
             {filteredAttendees.map((attendee) => (
               <li
-                key={attendee.idAttendance}
+                key={attendee.date}
                 className="list-group-item d-flex align-items-center"
               >
-                {attendee.studentId === 0 ? (
+                {attendee.role === 0 ? (
                   <FaChalkboardTeacher
                     style={{
                       fontSize: "20px",
@@ -41,7 +41,7 @@ const AttendeesModal: React.FC<AttendeesModalProps> = ({
                   />
                 )}
                 <span>
-                  {attendee.participant.firstName} {attendee.participant.lastName}
+                  {attendee.firstName} {attendee.lastName}
                 </span>
                 <span className="ms-auto text-muted">
                   {formatTime(attendee?.date!)}

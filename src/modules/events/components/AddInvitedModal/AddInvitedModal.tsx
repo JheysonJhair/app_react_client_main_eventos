@@ -76,7 +76,7 @@ const AddInvitedModal: React.FC<AddInvitedsModalProps> = ({
       }}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Agregar Participantes</Modal.Title>
+        <Modal.Title>Agregar Invitado</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>

@@ -19,7 +19,6 @@ const AddParticipantsModal: React.FC<AddParticipantsModalProps> = ({
   const [participant, setParticipant] = useState<Participant | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [id, setId] = useState(0);
 
   //---------------------------------------------------------------- GET PARTICIPANT BY DNI
   const handleSearchParticipant = async () => {
@@ -39,11 +38,6 @@ const AddParticipantsModal: React.FC<AddParticipantsModalProps> = ({
         setError("Participante no encontrado.");
         return;
       }
-      if (result.role == 0) {
-        setId(result.idTeacher);
-      } else {
-        setId(result.idStudent);
-      }
       setParticipant(result);
     } catch (err) {
       setError(
@@ -56,11 +50,11 @@ const AddParticipantsModal: React.FC<AddParticipantsModalProps> = ({
 
   //---------------------------------------------------------------- POST PARTICIPANT
   const handleAddParticipant = async () => {
-    if (!participant || !eventId) return;
+    if (!participant || !eventId || !eventId) return;
 
     setLoading(true);
     try {
-      const result = await addParticipantToEvent(eventId, participant.role, id);
+      const result = await addParticipantToEvent(eventId, participant.role, participant.idGuest!);
 
       if (!result.success) {
         Swal.fire({
