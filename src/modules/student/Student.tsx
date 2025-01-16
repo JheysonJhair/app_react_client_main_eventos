@@ -43,7 +43,11 @@ export function Students() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getAllStudent();
-      setStudent(data);
+      if(data == null){
+        setStudent([]);
+      }else{
+        setStudent(data)
+      }
       setLoading(false);
     };
 
@@ -161,6 +165,8 @@ export function Students() {
                   <th>Mail</th>
                   <th>Telefono</th>
                   <th>Género</th>
+                  <th>Codigo</th>
+                  <th>Cumpleaños</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -173,6 +179,8 @@ export function Students() {
                     <td>{student.mail}</td>
                     <td>{student.phone}</td>
                     <td>{student.gender ? "Masculino" : "Femenino"}</td>
+                    <td>{student.code}</td>
+                    <td>{student.birthDate}</td>
                     <td>
                       <button
                         className="btn btn-primary btn-sm"

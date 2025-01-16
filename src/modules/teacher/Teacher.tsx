@@ -43,8 +43,12 @@ export function Teachers() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getAllTeacher();
-      setTeacher(data);
-      setLoading(false); // Termina la carga cuando los datos se obtienen
+      if(data == null){
+        setTeacher([]);
+      }else{
+        setTeacher(data)
+      }
+      setLoading(false); 
     };
 
     fetchData();
@@ -161,6 +165,7 @@ export function Teachers() {
                   <th>Mail</th>
                   <th>Telefono</th>
                   <th>Género</th>
+                  <th>Cumpleaños</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -173,6 +178,7 @@ export function Teachers() {
                     <td>{teacher.mail}</td>
                     <td>{teacher.phone}</td>
                     <td>{teacher.gender ? "Masculino" : "Femenino"}</td>
+                    <td>{teacher.birthDate}</td>
                     <td>
                       <button
                         className="btn btn-primary btn-sm"

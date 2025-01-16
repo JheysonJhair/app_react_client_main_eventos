@@ -14,6 +14,8 @@ export function NewStudent() {
     mail: "",
     phone: "",
     gender: "",
+    birthDate: "",
+    code: "",
   });
 
   const [errors, setErrors] = useState({
@@ -23,6 +25,8 @@ export function NewStudent() {
     mail: "",
     phone: "",
     gender: "",
+    birthDate: "",
+    code: "",
   });
 
   const handleChange = (
@@ -49,6 +53,8 @@ export function NewStudent() {
           mail: formData.mail,
           phone: formData.phone,
           gender: formData.gender === "Masculino" ? true : false,
+          code: formData.code,
+          birthDate: formData.birthDate,
         };
 
         const response = await createStudent(studentData);
@@ -237,6 +243,45 @@ export function NewStudent() {
                         )}
                       </div>
                     </div>
+                    <div className="row mb-3">
+                      <label
+                        htmlFor="input07"
+                        className="col-sm-4 col-form-label"
+                      >
+                        CODIGO
+                      </label>
+                      <div className="col-sm-8">
+                        <div className="input-group">
+                          <span
+                            className="input-group-text"
+                            style={{
+                              border: errors.code ? "1px solid red" : "",
+                            }}
+                          >
+                            <i
+                              className={`bx bx-id-card${
+                                errors.code ? " text-danger" : ""
+                              }`}
+                            />
+                          </span>
+
+                          <input
+                            type="number"
+                            className={`form-control ${
+                              errors.code ? "is-invalid" : ""
+                            }`}
+                            id="input07"
+                            placeholder="code"
+                            name="code"
+                            value={formData.code}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        {errors.code && (
+                          <small className="text-danger">{errors.code}</small>
+                        )}
+                      </div>
+                    </div>
                   </div>
 
                   <div className="col-sm-6">
@@ -358,6 +403,45 @@ export function NewStudent() {
                         </div>
                         {errors.gender && (
                           <small className="text-danger">{errors.gender}</small>
+                        )}
+                      </div>
+                    </div>
+                    <div className="row mb-3">
+                      <label
+                        htmlFor="input07"
+                        className="col-sm-4 col-form-label"
+                      >
+                        fecha de nacimiento
+                      </label>
+                      <div className="col-sm-8">
+                        <div className="input-group">
+                          <span
+                            className="input-group-text"
+                            style={{
+                              border: errors.birthDate ? "1px solid red" : "",
+                            }}
+                          >
+                            <i
+                              className={`bx bx-id-card${
+                                errors.birthDate ? " text-danger" : ""
+                              }`}
+                            />
+                          </span>
+
+                          <input
+                            type="date"
+                            className={`form-control ${
+                              errors.birthDate ? "is-invalid" : ""
+                            }`}
+                            id="input07"
+                            placeholder="birthDate"
+                            name="birthDate"
+                            value={formData.birthDate}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        {errors.birthDate && (
+                          <small className="text-danger">{errors.birthDate}</small>
                         )}
                       </div>
                     </div>

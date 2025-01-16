@@ -26,6 +26,6 @@ export const validateForm = (formData: any) => {
   }
 
   errors.gender = formData.gender ? "" : "Seleccione un género";
-
+  errors.birthDate = formData.birthDate ? "" : "Ingrese una fecha";
   return errors;
 };

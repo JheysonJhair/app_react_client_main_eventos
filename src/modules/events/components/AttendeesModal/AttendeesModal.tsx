@@ -16,6 +16,7 @@ const AttendeesModal: React.FC<AttendeesModalProps> = ({
         <Modal.Title>Lista de Asistentes Presentes</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        <p>Cantidad de asistentes:{filteredAttendees.length}</p>
         <div style={{ maxHeight: "300px", overflowY: "auto" }}>
           <ul className="list-group">
             {filteredAttendees.map((attendee) => (

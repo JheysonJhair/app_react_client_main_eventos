@@ -4,6 +4,7 @@ import { Event } from "../types/Events";
 import { useEffect, useState } from "react";
 import { getAllEvents } from "../services/EventService";
 import { Loading } from "../components/ui/Loading";
+import { formatDate } from "../utils/common";
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ export function HomePage() {
 
   const eventImages: { [key: number]: string } = {
     0: "https://asesoriaentesis.edu.pe/wp-content/uploads/2023/11/1500x844-tesis-terminar-maestria.jpg",
-    1: "https://alianzaestudiantil.org/wp-content/uploads/2022/03/conferencias-para-profesionales.jpg",  
+    1: "https://alianzaestudiantil.org/wp-content/uploads/2022/03/conferencias-para-profesionales.jpg",
     2: "https://www.revistaeyn.com/binrepository/1200x806/0c0/0d0/none/26086/UCYG/deportestodos_6294117_20231218170022.jpg",
   };
 
@@ -41,10 +42,10 @@ export function HomePage() {
       <div className="page-content">
         <h6 className="mb-0 text-uppercase">Listado de eventos</h6>
         <hr />
-  
+
         {loading ? (
           <Loading />
-        ) : events && events.length > 0 ? ( 
+        ) : events && events.length > 0 ? (
           <div className="row">
             {events.map((event) => (
               <div
@@ -81,11 +82,12 @@ export function HomePage() {
                     </h5>
                     <div className="d-flex justify-content-between">
                       <p className="m-0">
-                        <strong>Fecha:</strong> {event.date}
+                        <strong>Fecha:</strong>
+                        {formatDate(event.date)}
                       </p>
                       <small className="text-muted">{event.startTime}</small>
                     </div>
-  
+
                     <div className="d-flex justify-content-between align-items-center mb-2">
                       <p className="card-text mb-0">
                         <strong>Ubicación:</strong> {event.location}
@@ -102,7 +104,7 @@ export function HomePage() {
                         )}
                       </small>
                     </div>
-  
+
                     <div
                       className="card-text text-justify"
                       style={{
@@ -128,5 +130,4 @@ export function HomePage() {
       </div>
     </div>
   );
-  
 }

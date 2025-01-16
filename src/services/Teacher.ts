@@ -37,6 +37,7 @@ export const createTeacher = async (data: {
   mail: string;
   phone: string;
   gender: boolean;
+  birthDate:string
 }): Promise<ApiResponse<Teacher>> => {
   try {
     const response = await fetch(

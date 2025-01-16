@@ -38,6 +38,8 @@ export const createStudent = async (
     mail: string;
     phone: string;
     gender: boolean;
+    code: string;
+    birthDate: string;
   }
 ): Promise<ApiResponse<Student>> => {
   try {

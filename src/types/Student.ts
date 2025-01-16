@@ -6,5 +6,7 @@ export interface Student {
   mail: string;
   phone: string;
   gender: boolean;
+  birthDate: string;
+  code: boolean;
   attendances?: null;
 }

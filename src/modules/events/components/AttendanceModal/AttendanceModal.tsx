@@ -77,14 +77,25 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
             role: response.data.role,
           });
 
-          Swal.fire({
-            icon: "success",
-            title: "Asistencia",
-            text: response.message,
-            confirmButtonText: "Aceptar",
-            position: "top-end",
-            timer: 3000,
-          });
+          if(response.message == "La asistencia ya fue tomada!"){
+            Swal.fire({
+              icon: "warning",
+              title: "Asistencia",
+              text: response.message,
+              confirmButtonText: "Aceptar",
+              position: "top-end",
+              timer: 3000,
+            });
+          }else{
+            Swal.fire({
+              icon: "success",
+              title: "Asistencia",
+              text: response.message,
+              confirmButtonText: "Aceptar",
+              position: "top-end",
+              timer: 3000,
+            });
+          }
         } else {
           Swal.fire({
             icon: "error",

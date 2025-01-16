@@ -14,6 +14,7 @@ export function NewTeacher() {
     mail: "",
     phone: "",
     gender: "",
+    birthDate: "",
   });
 
   const [errors, setErrors] = useState({
@@ -23,6 +24,7 @@ export function NewTeacher() {
     mail: "",
     phone: "",
     gender: "",
+    birthDate: "",
   });
 
   const handleChange = (
@@ -49,6 +51,7 @@ export function NewTeacher() {
           mail: formData.mail,
           phone: formData.phone,
           gender: formData.gender === "Masculino" ? true : false,
+          birthDate: formData.birthDate,
         };
 
         const response = await createTeacher(teacherData);
@@ -234,6 +237,45 @@ export function NewTeacher() {
                         </div>
                         {errors.dni && (
                           <small className="text-danger">{errors.dni}</small>
+                        )}
+                      </div>
+                    </div>
+                    <div className="row mb-3">
+                      <label
+                        htmlFor="input07"
+                        className="col-sm-4 col-form-label"
+                      >
+                        fecha de nacimiento
+                      </label>
+                      <div className="col-sm-8">
+                        <div className="input-group">
+                          <span
+                            className="input-group-text"
+                            style={{
+                              border: errors.birthDate ? "1px solid red" : "",
+                            }}
+                          >
+                            <i
+                              className={`bx bx-id-card${
+                                errors.birthDate ? " text-danger" : ""
+                              }`}
+                            />
+                          </span>
+
+                          <input
+                            type="date"
+                            className={`form-control ${
+                              errors.birthDate ? "is-invalid" : ""
+                            }`}
+                            id="input07"
+                            placeholder="birthDate"
+                            name="birthDate"
+                            value={formData.birthDate}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        {errors.birthDate && (
+                          <small className="text-danger">{errors.birthDate}</small>
                         )}
                       </div>
                     </div>
