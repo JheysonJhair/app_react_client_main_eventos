@@ -5,48 +5,48 @@ import Button from "react-bootstrap/Button";
 import { FaChevronLeft, FaChevronRight, FaEdit, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import {
-  actualizarStudent,
-  eliminarStudent,
-  getAllStudent,
-} from "../../services/Student";
-import { Student } from "../../types/Student";
-import { validateForm } from "../../utils/scheme/StudentValidationsForm";
+  actualizarGuest,
+  eliminarGuest,
+  getAllGuest,
+} from "../../services/Guest";
+import { Guest } from "../../types/Guest";
+import { validateForm } from "../../utils/scheme/GuestValidationsForm";
 import { Loading } from "../../components/ui/Loading";
 
-export function Students() {
-  const [student, setStudent] = useState<Student[]>([]);
+export function Guests() {
+  const [guest, setGuest] = useState<Guest[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [studentPerPage] = useState(9);
+  const [guestPerPage] = useState(9);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
   const [formErrors, setFormErrors] = useState<any>({});
   const [loading, setLoading] = useState(true);
 
-  const indexOfLastCliente = currentPage * studentPerPage;
-  const indexOfFirstCliente = indexOfLastCliente - studentPerPage;
-  const currentStudent = student.slice(indexOfFirstCliente, indexOfLastCliente);
+  const indexOfLastCliente = currentPage * guestPerPage;
+  const indexOfFirstCliente = indexOfLastCliente - guestPerPage;
+  const currentGuest = guest.slice(indexOfFirstCliente, indexOfLastCliente);
 
-  const totalPages = Math.ceil(student.length / studentPerPage);
+  const totalPages = Math.ceil(guest.length / guestPerPage);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  const filteredStudent = currentStudent.filter((student) =>
-    Object.values(student).some((value) =>
+  const filteredGuest = currentGuest.filter((guest) =>
+    Object.values(guest).some((value) =>
       value
         ? value.toString().toLowerCase().includes(searchTerm.toLowerCase())
         : false
     )
   );
 
-  //---------------------------------------------------------------- GET STUDENT
+  //---------------------------------------------------------------- GET GUEST
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAllStudent();
+      const data = await getAllGuest();
       if(data == null){
-        setStudent([]);
+        setGuest([]);
       }else{
-        setStudent(data)
+        setGuest(data)
       }
       setLoading(false);
     };
@@ -54,8 +54,8 @@ export function Students() {
     fetchData();
   }, []);
 
-  //---------------------------------------------------------------- DELETE STUDENT
-  const handleDeleteStudent = async (id: number) => {
+  //---------------------------------------------------------------- DELETE GUEST
+  const handleDeleteGuest = async (id: number) => {
     try {
       const confirmacion = await Swal.fire({
         title: "¿Estás seguro?",
@@ -69,15 +69,15 @@ export function Students() {
       });
 
       if (confirmacion.isConfirmed) {
-        const response = await eliminarStudent(id);
+        const response = await eliminarGuest(id);
         if (!response.success) {
           throw new Error(response.message);
         }
 
-        const updatedStudent = student.filter(
-          (student) => student.idStudent !== id
+        const updatedGuest = guest.filter(
+          (guest) => guest.idGuest !== id
         );
-        setStudent(updatedStudent);
+        setGuest(updatedGuest);
         await Swal.fire("¡Eliminado!", response.message, "success");
       }
     } catch (error) {
@@ -85,21 +85,21 @@ export function Students() {
     }
   };
 
-  //---------------------------------------------------------------- EDIT STUDENT
-  const handleEditStudent = (student: Student) => {
-    setSelectedStudent(student);
+  //---------------------------------------------------------------- EDIT GUEST
+  const handleEditGuest = (guest: Guest) => {
+    setSelectedGuest(guest);
     setModalIsOpen(true);
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
-    setSelectedStudent(null);
+    setSelectedGuest(null);
     setFormErrors({});
   };
 
   const saveChanges = async () => {
-    if (selectedStudent?.idStudent) {
-      const errors = validateForm(selectedStudent);
+    if (selectedGuest?.idGuest) {
+      const errors = validateForm(selectedGuest);
       setFormErrors(errors);
 
       if (Object.values(errors).some((error) => error !== "")) {
@@ -107,16 +107,17 @@ export function Students() {
       }
 
       try {
-        const response = await actualizarStudent(
-          selectedStudent
+        console.log(selectedGuest)
+        const response = await actualizarGuest(
+          selectedGuest
         );
         if (!response.success) {
           throw new Error(response.message);
         }
-        setStudent(
-          student.map((user) =>
-            user.idStudent === selectedStudent.idStudent
-              ? selectedStudent
+        setGuest(
+          guest.map((user) =>
+            user.idGuest === selectedGuest.idGuest
+              ? selectedGuest
               : user
           )
         );
@@ -127,7 +128,7 @@ export function Students() {
     }
 
     setModalIsOpen(false);
-    setSelectedStudent(null);
+    setSelectedGuest(null);
     setFormErrors({});
   };
 
@@ -138,7 +139,7 @@ export function Students() {
           <input
             type="text"
             className="form-control"
-            placeholder="Buscar estudiante..."
+            placeholder="Buscar Invitado..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -149,8 +150,8 @@ export function Students() {
         >
           {loading ? (
             <Loading />
-          ) : filteredStudent.length === 0 ? (
-            <div className="text-center">Sin estudiantes</div>
+          ) : filteredGuest.length === 0 ? (
+            <div className="text-center">Sin Invitados</div>
           ) : (
             <table
               className="table table-striped table-bordered"
@@ -162,37 +163,29 @@ export function Students() {
                   <th>Nombres</th>
                   <th>Apellidos</th>
                   <th>Mail</th>
-                  <th>Telefono</th>
-                  <th>Género</th>
-                  <th>Codigo</th>
-                  <th>Cumpleaños</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredStudent.map((student, index) => (
+                {filteredGuest.map((guest, index) => (
                   <tr key={index}>
-                    <td>{student.dni}</td>
-                    <td>{student.firstName}</td>
-                    <td>{student.lastName}</td>
-                    <td>{student.mail}</td>
-                    <td>{student.phone}</td>
-                    <td>{student.gender ? "Masculino" : "Femenino"}</td>
-                    <td>{student.code}</td>
-                    <td>{student.birthDate}</td>
+                    <td>{guest.dni}</td>
+                    <td>{guest.firstName}</td>
+                    <td>{guest.lastName}</td>
+                    <td>{guest.mail}</td>
                     <td>
                       <button
                         className="btn btn-primary btn-sm"
                         style={{ marginRight: "6px" }}
                         title="Editar"
-                        onClick={() => handleEditStudent(student)}
+                        onClick={() => handleEditGuest(guest)}
                       >
                         <FaEdit />
                       </button>
                       <button
                         className="btn btn-danger btn-sm"
                         onClick={() =>
-                          handleDeleteStudent(student.idStudent || 0)
+                          handleDeleteGuest(guest.idGuest || 0)
                         }
                       >
                         <FaTrash />
@@ -204,7 +197,7 @@ export function Students() {
             </table>
           )}
         </div>
-        {!loading && student.length > 0 && (
+        {!loading && guest.length > 0 && (
           <ul className="pagination justify-content-center">
             <li className={`page-item ${currentPage === 1 && "disabled"}`}>
               <button
@@ -245,10 +238,10 @@ export function Students() {
 
       <Modal show={modalIsOpen} onHide={closeModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Editar Estudiante</Modal.Title>
+          <Modal.Title>Editar Invitado</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {selectedStudent && (
+          {selectedGuest && (
             <form>
               <div className="row">
                 <div className="col-md-6">
@@ -260,10 +253,10 @@ export function Students() {
                       type="text"
                       className="form-control"
                       id="firstName"
-                      value={selectedStudent.firstName}
+                      value={selectedGuest.firstName}
                       onChange={(e) =>
-                        setSelectedStudent({
-                          ...selectedStudent,
+                        setSelectedGuest({
+                          ...selectedGuest,
                           firstName: e.target.value,
                         })
                       }
@@ -284,10 +277,10 @@ export function Students() {
                       type="text"
                       className="form-control"
                       id="lastName"
-                      value={selectedStudent.lastName}
+                      value={selectedGuest.lastName}
                       onChange={(e) =>
-                        setSelectedStudent({
-                          ...selectedStudent,
+                        setSelectedGuest({
+                          ...selectedGuest,
                           lastName: e.target.value,
                         })
                       }
@@ -309,10 +302,10 @@ export function Students() {
                   type="text"
                   className="form-control"
                   id="dni"
-                  value={selectedStudent.dni}
+                  value={selectedGuest.dni}
                   onChange={(e) =>
-                    setSelectedStudent({
-                      ...selectedStudent,
+                    setSelectedGuest({
+                      ...selectedGuest,
                       dni: e.target.value,
                     })
                   }
@@ -330,10 +323,10 @@ export function Students() {
                   type="email"
                   className="form-control"
                   id="mail"
-                  value={selectedStudent.mail}
+                  value={selectedGuest.mail}
                   onChange={(e) =>
-                    setSelectedStudent({
-                      ...selectedStudent,
+                    setSelectedGuest({
+                      ...selectedGuest,
                       mail: e.target.value,
                     })
                   }
@@ -341,50 +334,6 @@ export function Students() {
                 {formErrors.mail && (
                   <small className="text-danger">{formErrors.mail}</small>
                 )}
-              </div>
-              <div className="row">
-                <div className="col-md-6 mb-3">
-                  <label htmlFor="phone" className="form-label">
-                    Teléfono <span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="phone"
-                    value={selectedStudent.phone}
-                    onChange={(e) =>
-                      setSelectedStudent({
-                        ...selectedStudent,
-                        phone: e.target.value,
-                      })
-                    }
-                  />
-                  {formErrors.phone && (
-                    <small className="text-danger">{formErrors.phone}</small>
-                  )}
-                </div>
-                <div className="col-md-6 mb-3">
-                  <label htmlFor="gender" className="form-label">
-                    Género <span className="text-danger">*</span>
-                  </label>
-                  <select
-                    id="gender"
-                    className="form-control"
-                    value={selectedStudent.gender ? "Masculino" : "Femenino"}
-                    onChange={(e) =>
-                      setSelectedStudent({
-                        ...selectedStudent,
-                        gender: e.target.value === "Masculino",
-                      })
-                    }
-                  >
-                    <option value="Masculino">Masculino</option>
-                    <option value="Femenino">Femenino</option>
-                  </select>
-                  {formErrors.gender && (
-                    <small className="text-danger">{formErrors.gender}</small>
-                  )}{" "}
-                </div>
               </div>
             </form>
           )}

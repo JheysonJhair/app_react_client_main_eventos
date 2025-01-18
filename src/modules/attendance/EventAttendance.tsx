@@ -5,7 +5,8 @@ import {
   fetchPaymentByDateRange,
   fetchProductByDateRange,
 } from "../../services/Reports";
-import { formatDate } from "../../utils/common";
+
+import CardEvent from "./components/CardEvent";
 
 interface Payment {
   UserName: string;
@@ -25,7 +26,7 @@ export function EventAttendance() {
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
 
-  const [paymentData, setPaymentData] = useState<Payment[]>([]);
+  const [, setPaymentData] = useState<Payment[]>([]);
 
   // ---------------------------------------------------------------- POST PRODUCTS & INGRESOS => MEMBERSHIP PRODUCT OF RANGE
   const handleFetchData = async () => {
@@ -139,45 +140,12 @@ export function EventAttendance() {
         </div>
 
         <div>
-          <div className="card">
-            <div className="card-body">
-              <div className="table-responsive">
-                <table
-                  id="example2"
-                  className="table table-striped table-bordered"
-                >
-                  <thead>
-                    <tr>
-                      <th>Evento</th>
-                      <th>Fecha</th>
-                      <th>Hora Inicio</th>
-                      <th>Hora Fin</th>
-                      <th>Tipo</th>
-                      <th>Estado</th>
-                      <th>Participante</th>
-                      <th>Asistentes</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {paymentData.map((payment, index) => (
-                      <tr key={index}>
-                        <td>{payment.UserName}</td>
-                        <td>{payment.Plan}</td>
-                        <td>{payment.Name}</td>
-                        <td>{payment.Celular || "N/A"}</td>
-                        <td>{payment.Code}</td>
-                        <td>{payment.Total}</td>
-                        <td>{payment.Due}</td>
-                        <td>{formatDate(payment.StartDate)}</td>
-                        <td>{formatDate(payment.EndDate)}</td>
-                        <td>{payment.PaymentType}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+        <CardEvent
+        date="12/12/24"
+        title="EventoIOT"
+        location="Aula 103"
+        professor="Prof. Sergio Castelli"
+      />
         </div>
       </div>
     </div>

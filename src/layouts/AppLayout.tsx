@@ -98,7 +98,7 @@ function AppLayout() {
                 <li>
                   <NavLink to="/attendance-event">
                     <i className="bx bx-radio-circle" />
-                    Asistencias
+                    Reporte
                   </NavLink>
                 </li>
               </ul>
@@ -172,13 +172,13 @@ function AppLayout() {
 
               <ul>
                 <li>
-                  <NavLink to="/new-student/">
+                  <NavLink to="/new-guest/">
                     <i className="bx bx-radio-circle" />
                     Crear Invitado
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/student/">
+                  <NavLink to="/guest/">
                     <i className="bx bx-radio-circle" />
                     Invitados
                   </NavLink>

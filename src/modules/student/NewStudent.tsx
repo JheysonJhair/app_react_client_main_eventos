@@ -62,7 +62,7 @@ export function NewStudent() {
           Swal.fire({
             icon: "success",
             title: "¡Estudiante creado!",
-            text: "El Estudiante se ha creado correctamente.",
+            text: response.message,
             confirmButtonText: "Aceptar",
           });
           navigate("/student/");

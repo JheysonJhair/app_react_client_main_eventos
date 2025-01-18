@@ -1,5 +1,5 @@
 import { Event } from "../types/Events";
-import { Invitado, Participant } from "../types/Participant";
+import { Participant } from "../types/Participant";
 import { ApiResponse } from "../types/Response/Response";
 
 //---------------------------------------------------------------- GET ALL
@@ -199,63 +199,4 @@ export const addParticipantToEvent = async (
 
 
 
-
-
-//---------------------------------------------------------------- ADD INVITED TO EVENT
-export const addInvitedToEvent = async (
-  participant: Invitado
-): Promise<ApiResponse<null>> => {
-  try {
-    const payload = {
-      firstName: participant.firstName,
-      lastName: participant.lastName,
-      mail: participant.mail,
-      dni: participant.dni,
-    };
-
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/Event/CreateGuest`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      }
-    );
-
-    const data: ApiResponse<null> = await response.json();
-    return data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-//---------------------------------------------------------------- GET ALL INVITED
-export const getAllGuest = async (): Promise<Invitado[]> => {
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/Guest/GetAll`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Error al obtener los invitados");
-    }
-
-    const data: ApiResponse<Invitado[]> = await response.json();
-    if (!data.success) {
-      throw new Error(data.message);
-    }
-
-    return data.data;
-  } catch (error) {
-    throw error;
-  }
-};
 

@@ -3,7 +3,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 import Swal from "sweetalert2";
 
 import { AddInvitedsModalProps } from "./AddInvitedModal.types";
-import { addInvitedToEvent } from "../../../../services/EventService";
+import { addInvitedToEvent } from "../../../../services/Guest";
 
 const AddInvitedModal: React.FC<AddInvitedsModalProps> = ({
   show,

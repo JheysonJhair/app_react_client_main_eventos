@@ -67,11 +67,10 @@ export const createStudent = async (
 
 //---------------------------------------------------------------- UPDATE STUDENT
 export const actualizarStudent = async (
-  studentId: number,
   Student: Partial<Student>
 ): Promise<ApiResponse<Student>> => {
   try {
-    const url = `${import.meta.env.VITE_API_URL}/Student/${studentId}`;
+    const url = `${import.meta.env.VITE_API_URL}/Student`;
     const response = await fetch(url, {
       method: "PUT",
       headers: {

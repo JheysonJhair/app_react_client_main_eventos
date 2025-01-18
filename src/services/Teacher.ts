@@ -64,11 +64,10 @@ export const createTeacher = async (data: {
 
 //---------------------------------------------------------------- UPDATE TEACHER
 export const actualizarTeacher = async (
-  teacherId: number,
   teacher: Partial<Teacher>
 ): Promise<ApiResponse<Teacher>> => {
   try {
-    const url = `${import.meta.env.VITE_API_URL}/Teacher/${teacherId}`;
+    const url = `${import.meta.env.VITE_API_URL}/Teacher`;
     const response = await fetch(url, {
       method: "PUT",
       headers: {

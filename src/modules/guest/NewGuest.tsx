@@ -2,19 +2,16 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-import { createTeacher } from "../../services/Teacher";
-import { validateForm } from "../../utils/scheme/TeacherValidationsForm";
+import { validateForm } from "../../utils/scheme/GuestValidationsForm";
+import { addInvitedToEvent } from "../../services/Guest";
 
-export function NewTeacher() {
+export function NewGuest() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     dni: "",
     mail: "",
-    phone: "",
-    gender: "",
-    birthDate: "",
   });
 
   const [errors, setErrors] = useState({
@@ -22,9 +19,6 @@ export function NewTeacher() {
     lastName: "",
     dni: "",
     mail: "",
-    phone: "",
-    gender: "",
-    birthDate: "",
   });
 
   const handleChange = (
@@ -44,25 +38,22 @@ export function NewTeacher() {
 
     if (Object.values(validationErrors).every((error) => !error)) {
       try {
-        const teacherData = {
+        const guestData = {
           firstName: formData.firstName,
           lastName: formData.lastName,
           dni: formData.dni,
           mail: formData.mail,
-          phone: formData.phone,
-          gender: formData.gender === "Masculino" ? true : false,
-          birthDate: formData.birthDate,
         };
 
-        const response = await createTeacher(teacherData);
+        const response = await addInvitedToEvent(guestData);
         if (response.success) {
           Swal.fire({
             icon: "success",
-            title: "¡Docente creado!",
+            title: "Invitado creado!",
             text: response.message,
             confirmButtonText: "Aceptar",
           });
-          navigate("/teacher/");
+          navigate("/guest/");
         } else {
           Swal.fire({
             icon: "error",
@@ -75,7 +66,7 @@ export function NewTeacher() {
         Swal.fire({
           icon: "error",
           title: "Opps, Algo salio mal",
-          text: "Hubo un error al crear el docente. Por favor, intente nuevamente.",
+          text: "Hubo un error al crear el Invitado. Por favor, intente nuevamente.",
           confirmButtonText: "Aceptar",
         });
       }
@@ -86,7 +77,7 @@ export function NewTeacher() {
     <div className="page-wrapper">
       <div className="page-content">
         <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-          <div className="breadcrumb-title pe-3">Docente</div>
+          <div className="breadcrumb-title pe-3">Invitado</div>
           <div className="ps-3">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb mb-0 p-0">
@@ -96,7 +87,7 @@ export function NewTeacher() {
                   </a>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
-                  Nuevo docente
+                  Nuevo Invitado
                 </li>
               </ol>
             </nav>
@@ -107,8 +98,8 @@ export function NewTeacher() {
             <div className="col-sm-3 d-flex flex-column align-items-center text-center">
               <img
                 src="../../assets/images/avatars/avatar-1.png"
-                alt="Docente"
-                className="p-1 bg-primary rounded-circle"
+                alt="Estudiante"
+                className="p-1 bg-primary"
                 width={200}
               />
             </div>
@@ -240,45 +231,6 @@ export function NewTeacher() {
                         )}
                       </div>
                     </div>
-                    <div className="row mb-3">
-                      <label
-                        htmlFor="input07"
-                        className="col-sm-4 col-form-label"
-                      >
-                        fecha de nacimiento
-                      </label>
-                      <div className="col-sm-8">
-                        <div className="input-group">
-                          <span
-                            className="input-group-text"
-                            style={{
-                              border: errors.birthDate ? "1px solid red" : "",
-                            }}
-                          >
-                            <i
-                              className={`bx bx-id-card${
-                                errors.birthDate ? " text-danger" : ""
-                              }`}
-                            />
-                          </span>
-
-                          <input
-                            type="date"
-                            className={`form-control ${
-                              errors.birthDate ? "is-invalid" : ""
-                            }`}
-                            id="input07"
-                            placeholder="birthDate"
-                            name="birthDate"
-                            value={formData.birthDate}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        {errors.birthDate && (
-                          <small className="text-danger">{errors.birthDate}</small>
-                        )}
-                      </div>
-                    </div>
                   </div>
 
                   <div className="col-sm-6">
@@ -321,94 +273,12 @@ export function NewTeacher() {
                         )}
                       </div>
                     </div>
-
-                    <div className="row mb-3">
-                      <label
-                        htmlFor="input10"
-                        className="col-sm-4 col-form-label"
-                      >
-                        Teléfono
-                      </label>
-                      <div className="col-sm-8">
-                        <div className="input-group">
-                          <span
-                            className="input-group-text"
-                            style={{
-                              border: errors.phone ? "1px solid red" : "",
-                            }}
-                          >
-                            <i
-                              className={`bx bx-phone${
-                                errors.phone ? " text-danger" : ""
-                              }`}
-                            />
-                          </span>
-
-                          <input
-                            type="text"
-                            className={`form-control ${
-                              errors.phone ? "is-invalid" : ""
-                            }`}
-                            id="input10"
-                            placeholder="Número de teléfono"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        {errors.phone && (
-                          <small className="text-danger">{errors.phone}</small>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="row mb-3">
-                      <label
-                        htmlFor="input05"
-                        className="col-sm-4 col-form-label"
-                      >
-                        Género
-                      </label>
-                      <div className="col-sm-8">
-                        <div className="input-group">
-                          <span
-                            className="input-group-text"
-                            style={{
-                              border: errors.gender ? "1px solid red" : "",
-                            }}
-                          >
-                            <i
-                              className={`bx bx-user-circle${
-                                errors.gender ? " text-danger" : ""
-                              }`}
-                            />
-                          </span>
-
-                          <select
-                            className={`form-select ${
-                              errors.gender ? "is-invalid" : ""
-                            }`}
-                            id="input05"
-                            value={formData.gender}
-                            onChange={handleChange}
-                            name="gender"
-                          >
-                            <option value="">Seleccionar género</option>
-                            <option value="Masculino">Masculino</option>
-                            <option value="Femenino">Femenino</option>
-                          </select>
-                        </div>
-                        {errors.gender && (
-                          <small className="text-danger">{errors.gender}</small>
-                        )}
-                      </div>
-                    </div>
                   </div>
                   <div className="row mt-2">
                   <div className="col"></div>
                   <div className="col-auto ml-auto">
                     <button type="submit" className="btn btn-primary btn-block">
-                      <i className="bx bx-user-circle" /> Registrar docente
+                      <i className="bx bx-user-circle" /> Registrar Invitado
                     </button>
                   </div>
                 </div>

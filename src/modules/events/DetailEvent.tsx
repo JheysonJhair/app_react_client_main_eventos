@@ -192,6 +192,7 @@ export function DetailEvent() {
                     <button
                       className="btn btn-outline-primary"
                       onClick={handleOpenAddInvitedModal}
+                      disabled={eventData?.isPrivate}
                     >
                       <span className="text">Agregar Invitado</span>
                       <i className="bx bxs-user"></i>
