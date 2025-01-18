@@ -108,7 +108,6 @@ export function Teachers() {
 
       try {
         const response = await actualizarTeacher(
-          selectedTeacher.idTeacher,
           selectedTeacher
         );
         if (!response.success) {

@@ -1,4 +1,5 @@
 import { Event } from "../types/Events";
+
 import { Participant } from "../types/Participant";
 import { ApiResponse } from "../types/Response/Response";
 
@@ -191,12 +192,5 @@ export const addParticipantToEvent = async (
     throw error;
   }
 };
-
-
-
-
-
-
-
 
 

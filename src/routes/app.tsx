@@ -14,6 +14,8 @@ import ProtectedRoute from "../components/ProtectedRoute ";
 import TeachersAssistance from "../modules/attendance/TeachersAssistance";
 import { Guests } from "../modules/guest/Guest";
 import { NewGuest } from "../modules/guest/NewGuest";
+import { EventAttendanceDetail } from "../modules/attendance/EventAttendanceDetail";
+
 
 const appRouter = [
   {
@@ -40,6 +42,10 @@ const appRouter = [
       {
         path: "/attendance-event",
         element: <EventAttendance />,
+      },
+      {
+        path: "/attendance-event/:id",
+        element: <EventAttendanceDetail />,
       },
       //Teacher
       {

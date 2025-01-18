@@ -1,34 +1,37 @@
 import React from "react";
-import { FaMapMarkerAlt, FaUser } from "react-icons/fa";
+import { FaMapMarkerAlt, FaClock } from "react-icons/fa";
 
 interface CardEventProps {
   date: string;
   title: string;
   location: string;
-  professor: string;
+  hora: string;
 }
 
-const CardEvent: React.FC<CardEventProps> = ({ date, title, location, professor }) => {
+const CardEvent: React.FC<CardEventProps> = ({
+  date,
+  title,
+  location,
+  hora,
+}) => {
   return (
-    <div className="bg-primary text-white rounded-lg p-4 w-80 shadow-md relative overflow-hidden">
-      <div className="absolute top-0 right-0 h-full w-1/2 bg-blue-700 opacity-20 rounded-full transform translate-x-1/2 -translate-y-1/2"></div>
-      <div className="absolute bottom-0 right-0 h-full w-1/3 bg-blue-700 opacity-20 rounded-full transform translate-x-1/3 translate-y-1/2"></div>
-
-      <div className="mb-4">
-        <span className="bg-white text-secondary px-3 py-1 rounded-full text-sm font-semibold">
+    <div className="card bg-primary text-white rounded-lg shadow-lg p-3">
+      <div className="position-relative">
+        <div className="bg-white text-secondary px-2 py-1 rounded text-sm fw-semibold d-inline-block mb-3">
           {date}
-        </span>
+        </div>
       </div>
-      
       <div>
-        <h3 className="text-xl font-bold mb-4">{title}</h3>
-        <div className="flex flex-col gap-2 text-sm">
-          <p className="flex items-center gap-2">
-            <FaMapMarkerAlt className="text-white" /> {location}
-          </p>
-          <p className="flex items-center gap-2">
-            <FaUser className="text-white" /> {professor}
-          </p>
+        <h3 className="card-title fs-4 fw-bold mb-3">{title}</h3>
+        <div className="d-flex justify-content-between align-items-center text-sm">
+          <div className="d-flex align-items-center">
+            <FaMapMarkerAlt className="me-2" />
+            {location}
+          </div>
+          <div className="d-flex align-items-center">
+            <FaClock className="me-2" />
+            {hora}
+          </div>
         </div>
       </div>
     </div>

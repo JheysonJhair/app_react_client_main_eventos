@@ -1,99 +1,52 @@
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  fetchIncomeMembershipByDateRange,
-  fetchIncomeProductByDateRange,
-  fetchPaymentByDateRange,
-  fetchProductByDateRange,
-} from "../../services/Reports";
-
 import CardEvent from "./components/CardEvent";
-
-interface Payment {
-  UserName: string;
-  Plan: string;
-  Name: string;
-  Celular: string | null;
-  Code: string;
-  Total: number;
-  Due: number;
-  StartDate: string;
-  EndDate: string;
-  PaymentType: string;
-}
-
+import { getAllEvents } from "../../services/EventService";
+import { Event } from "../../types/Events";
+import { Loading } from "../../components/ui/Loading";
 
 export function EventAttendance() {
-  const [fechaInicio, setFechaInicio] = useState("");
-  const [fechaFin, setFechaFin] = useState("");
-
-  const [, setPaymentData] = useState<Payment[]>([]);
-
-  // ---------------------------------------------------------------- POST PRODUCTS & INGRESOS => MEMBERSHIP PRODUCT OF RANGE
-  const handleFetchData = async () => {
-    try {
-      const data = await fetchIncomeMembershipByDateRange(
-        fechaInicio,
-        fechaFin
-      );
-      if (data.success) {
-      }
-
-      const data2 = await fetchIncomeProductByDateRange(fechaInicio, fechaFin);
-      if (data2.success) {
-      }
-
-      const paymentDataResponse = await fetchPaymentByDateRange(
-        fechaInicio,
-        fechaFin
-      );
-      if (paymentDataResponse.success) {
-        setPaymentData(paymentDataResponse.data);
-      }
-
-      const productDataResponse = await fetchProductByDateRange(
-        fechaInicio,
-        fechaFin
-      );
-      console.log(productDataResponse);
-      if (productDataResponse.success) {
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  // ---------------------------------------------------------------- POST PRODUCTS & INGRESOS => MEMBERSHIP PRODUCT
-  const handleTodayReport = async () => {
-    const today = new Date().toISOString().split("T")[0];
-
-    try {
-      const data = await fetchIncomeMembershipByDateRange(today, today);
-      if (data.success) {
-      }
-
-      const data2 = await fetchIncomeProductByDateRange(today, today);
-      if (data2.success) {
-      }
-
-      const paymentDataResponse = await fetchPaymentByDateRange(today, today);
-      if (paymentDataResponse.success) {
-        setPaymentData(paymentDataResponse.data);
-      }
-
-      const productDataResponse = await fetchProductByDateRange(today, today);
-      if (productDataResponse.success) {
-      }
-
-      setFechaInicio(today);
-      setFechaFin(today);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  const [events, setEvents] = useState<Event[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    handleTodayReport();
+    const fetchEvents = async () => {
+      try {
+        const response = await getAllEvents();
+        setEvents(response);
+        setFilteredEvents(response); 
+      } catch (err: any) {
+        console.error("Error fetching events:", err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
   }, []);
+
+  const handleCardClick = (id: number) => {
+    navigate(`/attendance-event/${id}`);
+  };
+
+  const handleFilter = () => {
+    const filtered = events.filter((event) => {
+      const eventDate = new Date(event.date);
+      const start = startDate ? new Date(startDate) : null;
+      const end = endDate ? new Date(endDate) : null;
+
+      return (
+        (!start || eventDate == start) &&
+        (!end || eventDate == end)
+      );
+    });
+
+    setFilteredEvents(filtered); 
+  };
 
   return (
     <div className="page-wrapper">
@@ -115,38 +68,55 @@ export function EventAttendance() {
             </nav>
           </div>
         </div>
+
         <div className="row mb-3">
           <div className="col-md-3">
             <input
               type="date"
               className="form-control"
-              value={fechaInicio}
-              onChange={(e) => setFechaInicio(e.target.value)}
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
             />
           </div>
           <div className="col-md-3">
             <input
               type="date"
               className="form-control"
-              value={fechaFin}
-              onChange={(e) => setFechaFin(e.target.value)}
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
           <div className="col-md-6 d-flex justify-content-end">
-            <button className="btn btn-primary" onClick={handleFetchData}>
+            <button className="btn btn-primary" onClick={handleFilter}>
               Obtener Datos
             </button>
           </div>
         </div>
 
-        <div>
-        <CardEvent
-        date="12/12/24"
-        title="EventoIOT"
-        location="Aula 103"
-        professor="Prof. Sergio Castelli"
-      />
-        </div>
+        {loading ? (
+          <Loading />
+        ) : (
+          <div className="row">
+            {filteredEvents.map((event) => (
+              <div className="col-md-3 mb-4" key={event.idEvent}>
+                <div
+                  onClick={() => handleCardClick(event.idEvent)}
+                  style={{
+                    cursor: "pointer",
+                    transition: "transform 0.2s",
+                  }}
+                >
+                  <CardEvent
+                    date={new Date(event.date).toLocaleDateString()}
+                    title={event.name}
+                    location={event.location}
+                    hora={event.startTime}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
