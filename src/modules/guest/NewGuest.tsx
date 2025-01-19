@@ -243,7 +243,7 @@ export function NewGuest() {
                         htmlFor="input09"
                         className="col-sm-4 col-form-label"
                       >
-                        Correo Electrónico
+                        Correo Electrónico (Opcional)
                       </label>
                       <div className="col-sm-8">
                         <div className="input-group">

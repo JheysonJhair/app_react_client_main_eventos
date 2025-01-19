@@ -10,11 +10,6 @@ export const validateForm = (formData: any) => {
   } else {
     errors.dni = "";
   }
-
-  errors.mail =
-    formData.mail && /\S+@\S+\.\S+/.test(formData.mail)
-      ? ""
-      : "Correo electrónico inválido";
       
   return errors;
 };

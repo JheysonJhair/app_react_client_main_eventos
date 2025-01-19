@@ -30,6 +30,8 @@ export interface StudentAttendance {
   lastName: string;
   mail: string;
   phone: String;
+  code:string;
+  gender:string
   attendance: attendance;
 }
 
