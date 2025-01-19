@@ -127,7 +127,7 @@ export function DetailEvent() {
                 <div className="card-body d-flex flex-column">
                   <div className="d-flex justify-content-between mb-2">
                     <p className="m-0">
-                      <strong>Fecha:</strong> {eventData?.date}
+                      <strong>Fecha:</strong> {new Date(eventData?.date!).toLocaleDateString()}
                     </p>
                     <small className="text-muted">{eventData?.startTime}</small>
                   </div>
@@ -250,7 +250,6 @@ export function DetailEvent() {
                     <button
                       className="btn btn-outline-primary"
                       onClick={handleOpenAddInvitedModal}
-                      disabled={eventData?.isPrivate}
                     >
                       <span className="text">Agregar Invitado</span>
                       <i className="bx bxs-user"></i>
@@ -258,7 +257,6 @@ export function DetailEvent() {
                     <button
                       className="btn btn-outline-primary"
                       onClick={handleOpenAddParticipantsModal}
-                      disabled={eventData?.isPrivate}
                     >
                       <span className="text">Agregar Participantes</span>
                       <i className="bx bxs-user"></i>

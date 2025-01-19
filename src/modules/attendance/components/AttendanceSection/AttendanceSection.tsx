@@ -55,7 +55,7 @@ export default function AttendanceSection({
                     </td>
                     <td>{item.mail}</td>
                     <td>{item.gender ? "Masculino" : "Femenino"}</td>
-                    <td>{item.attendance?.date || "-"}</td>
+                    <td>{new Date(item.attendance?.date).toLocaleDateString() || "-"}</td>
                     <td>{item.attendance?.departureDate || "-"}</td>
                     <td>{duration !== "-" ? `${duration} min` : "-"}</td>
                     <td className="text-center">

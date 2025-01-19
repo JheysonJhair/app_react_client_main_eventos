@@ -105,17 +105,17 @@ export function EventAttendanceDetail() {
           <AttendanceSection
             title="Docentes"
             attendanceList={eventDetails?.listTeacherAttendance || []}
-            headers={["Dni", "Nombre", "Email", "Género", "Hora Entrada", "Hora Salida", "Estado"]}
+            headers={["Dni", "Nombre", "Email", "Género", "Hora Entrada", "Hora Salida", "Tiempo de asistencia", "Estado"]}
           />
           <AttendanceSection
             title="Estudiantes"
             attendanceList={eventDetails?.listStudentAttendance || []}
-            headers={["Dni", "Nombre", "Email", "Teléfono", "Hora Entrada", "Hora Salida", "Estado"]}
+            headers={["Dni", "Nombre", "Email", "Teléfono", "Hora Entrada", "Hora Salida", "Tiempo de asistencia", "Estado"]}
           />
           <AttendanceSection
             title="Invitados"
             attendanceList={eventDetails?.listGuestAttendancee || []}
-            headers={["Dni", "Nombre", "Email","Genero" ,"Hora Entrada", "Hora Salida", "Estado"]}
+            headers={["Dni", "Nombre", "Email","Genero" ,"Hora Entrada", "Hora Salida", "Tiempo de asistencia", "Estado"]}
           />
         </div>
       </div>
