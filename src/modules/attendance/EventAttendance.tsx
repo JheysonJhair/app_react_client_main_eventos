@@ -17,8 +17,14 @@ export function EventAttendance() {
       const fetchEvents = async () => {
         try {
           const response = await getAllEvents();
-          setEvents(response);
-          setFilteredEvents(response);
+          if(response == null){
+            setEvents([]);
+            setFilteredEvents([]);
+          }else{
+            setEvents(response);
+            setFilteredEvents(response);
+          }
+          
         } catch (err: any) {
           console.error("Error fetching events:", err.message);
         } finally {
