@@ -8,7 +8,6 @@ export interface Event {
   location: string;
   isPrivate: boolean;
   description: string;
-  duration: string;
   eventTypeId: number;
   attendances?: Attendance[];
 }

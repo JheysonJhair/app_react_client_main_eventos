@@ -11,18 +11,25 @@ interface AttendanceModalProps {
   show: boolean;
   onHide: () => void;
   eventId: string | undefined;
+  startTime: string | undefined;
+  endTime: string | undefined;
 }
 
 const AttendanceModal: React.FC<AttendanceModalProps> = ({
   show,
   onHide,
   eventId,
+  startTime,
+  endTime,
 }) => {
   const [dni, setDni] = useState<string>("");
   const [userData, setUserData] = useState<ParticipantAttendance | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [disabled, setDisabled] = useState<boolean>(false);
   const [dniError, setDniError] = useState<string | null>(null);
+  const [attendanceType, setAttendanceType] = useState<"entrada" | "salida">(
+    "entrada"
+  );
   const dniInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -46,27 +53,47 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     }
   }, [dni, disabled]);
 
+  const parseTime = (time: string): Date => {
+    const [hours, minutes] = time.split(":").map(Number);
+    const now = new Date(); 
+    now.setHours(hours, minutes, 0, 0);
+    return now;
+  };
+
   const handleDniChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDni(e.target.value);
   };
 
+  const handleAttendanceTypeChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setAttendanceType(e.target.checked ? "salida" : "entrada");
+  };
+
   //---------------------------------------------------------------- POST ATTENDANCE
   const handleDniSubmit = async () => {
-    if (dni.length !== 8 || isNaN(Number(dni))) {
-      setDniError("Por favor ingrese un DNI válido de 8 dígitos.");
-      setTimeout(() => {
-        setDniError(null);
-      }, 3000);
+    if (!startTime || !endTime) {
+      setDniError("La hora de inicio o fin no está definida.");
       return;
-    } else {
-      setDniError(null);
     }
 
-    setDisabled(true);
-    setLoading(true);
+    const startDateTime = parseTime(startTime);
+    const endDateTime = parseTime(endTime);
+    const currentTime = new Date();
+
+    const toleranceTime = new Date(startDateTime.getTime() + 15 * 60000);
+    const isLate = currentTime > toleranceTime;
+
+    const band = currentTime >= startDateTime && currentTime <= endDateTime;
 
     try {
-      const eventData = { dni, eventId: parseInt(eventId || "0") };
+      const eventData = {
+        dni,
+        eventId: parseInt(eventId || "0"),
+        band,
+        isLate,
+      };
+      console.log(eventData);
       const response = await asistenciaEvent(eventData);
 
       if (response.success) {
@@ -77,25 +104,14 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
             role: response.data.role,
           });
 
-          if(response.message == "La asistencia ya fue tomada!"){
-            Swal.fire({
-              icon: "warning",
-              title: "Asistencia",
-              text: response.message,
-              confirmButtonText: "Aceptar",
-              position: "top-end",
-              timer: 3000,
-            });
-          }else{
-            Swal.fire({
-              icon: "success",
-              title: "Asistencia",
-              text: response.message,
-              confirmButtonText: "Aceptar",
-              position: "top-end",
-              timer: 3000,
-            });
-          }
+          Swal.fire({
+            icon: "success",
+            title: "Asistencia",
+            text: response.message,
+            confirmButtonText: "Aceptar",
+            position: "top-end",
+            timer: 3000,
+          });
         } else {
           Swal.fire({
             icon: "error",
@@ -106,16 +122,9 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
             timer: 3000,
           });
         }
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Opps, Algo salio mal",
-          text: "Por favor, intente nuevamente.",
-          confirmButtonText: "Aceptar",
-        });
       }
     } catch (error) {
-      setDniError("Hubo un error al buscar el usuario.");
+      setDniError("Hubo un error al registrar la asistencia.");
     } finally {
       setLoading(false);
       setTimeout(() => {
@@ -137,6 +146,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            position: "relative",
           }}
         >
           <div
@@ -150,6 +160,21 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
               marginLeft: "30px",
             }}
           >
+            <Form.Check
+              type="switch"
+              id="attendanceTypeSwitch"
+              label={attendanceType === "entrada" ? "Entrada" : "Salida"}
+              checked={attendanceType === "salida"}
+              onChange={handleAttendanceTypeChange}
+              style={{
+                position: "absolute",
+                top: "-64px",
+                left: "86%",
+                transform: "translateX(-50%)",
+                fontSize: "18px",
+              }}
+            />
+
             <CustomClock />
           </div>
           <div

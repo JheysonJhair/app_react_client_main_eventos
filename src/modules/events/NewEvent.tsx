@@ -7,6 +7,7 @@ import { createEvent } from "../../services/EventService";
 
 export function NewEvent() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<any>({});
   const [eventData, setEventData] = useState({
     name: "",
@@ -25,10 +26,21 @@ export function NewEvent() {
     >
   ) => {
     const { id, value } = e.target;
-    setEventData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
+
+    if (
+      (id === "name" && value.length <= 25) ||
+      (id === "location" && value.length <= 30)
+    ) {
+      setEventData((prevData) => ({
+        ...prevData,
+        [id]: value,
+      }));
+    } else if (id !== "name" && id !== "location") {
+      setEventData((prevData) => ({
+        ...prevData,
+        [id]: value,
+      }));
+    }
   };
 
   // ---------------------------------------------------------------- POST EVENT
@@ -42,6 +54,7 @@ export function NewEvent() {
     }
 
     try {
+      setLoading(true);
       const response = await createEvent(eventData);
       if (response.success) {
         Swal.fire({
@@ -61,6 +74,7 @@ export function NewEvent() {
           confirmButtonText: "Aceptar",
         });
       }
+      setLoading(false);
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -68,6 +82,7 @@ export function NewEvent() {
         text: "Hubo un error al crear el evento. Por favor, intente nuevamente.",
         confirmButtonText: "Aceptar",
       });
+      setLoading(false);
     }
   };
 
@@ -100,7 +115,7 @@ export function NewEvent() {
                 <div className="row">
                   <div className="col-lg-6">
                     <div className="border border-3 p-4 rounded">
-                      <div className="mb-3">
+                      <div className="mb-3 position-relative">
                         <label htmlFor="name" className="form-label">
                           Nombre del evento
                         </label>
@@ -110,15 +125,27 @@ export function NewEvent() {
                             errors.name ? "is-invalid" : ""
                           }`}
                           id="name"
+                          name="name"
                           value={eventData.name}
                           onChange={handleChange}
-                          placeholder="Ingrese el nombre"
+                          placeholder="Ingrese un nombre corto"
                         />
+                        <p
+                          className="form-text text-muted"
+                          style={{
+                            position: "absolute",
+                            bottom: "-20px",
+                            right: "0",
+                            margin: "0",
+                          }}
+                        >
+                          {eventData.name.length}/25
+                        </p>
                         {errors.name && (
                           <small className="text-danger">{errors.name}</small>
                         )}
                       </div>
-                      <div className="mb-3">
+                      <div className="mb-3 position-relative">
                         <label htmlFor="location" className="form-label">
                           Lugar
                         </label>
@@ -128,16 +155,29 @@ export function NewEvent() {
                             errors.location ? "is-invalid" : ""
                           }`}
                           id="location"
+                          name="location"
                           value={eventData.location}
                           onChange={handleChange}
-                          placeholder="Lugar del evento"
+                          placeholder="Ingrese un lugar"
                         />
+                        <p
+                          className="form-text text-muted"
+                          style={{
+                            position: "absolute",
+                            bottom: "-20px",
+                            right: "0",
+                            margin: "0",
+                          }}
+                        >
+                          {eventData.location.length}/30
+                        </p>
                         {errors.location && (
                           <small className="text-danger">
                             {errors.location}
                           </small>
                         )}
                       </div>
+
                       <div className="mb-3">
                         <label htmlFor="description" className="form-label">
                           Descripción
@@ -157,7 +197,7 @@ export function NewEvent() {
                             {errors.description}
                           </small>
                         )}
-                      </div>{" "}
+                      </div>
                       <div className="mb-3">
                         <label htmlFor="date" className="form-label">
                           Fecha del evento
@@ -274,8 +314,25 @@ export function NewEvent() {
                 </div>
               </div>
               <div className="mb-3 text-end">
-                <button type="submit" className="btn btn-primary">
-                  Crear Evento
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-block"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span
+                        className="spinner-border spinner-border-sm"
+                        role="status"
+                        aria-hidden="true"
+                      />{" "}
+                      Creando...
+                    </>
+                  ) : (
+                    <>
+                      <i className="bx bx-user-circle" /> Crear evento
+                    </>
+                  )}
                 </button>
               </div>
             </form>

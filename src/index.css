@@ -28,3 +28,18 @@
   max-height: 490px;
   overflow-y: auto;
 }
+
+.card {
+  position: relative;
+  overflow: hidden; 
+}
+.triangle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 110px 110px 0; 
+  border-color: transparent #2a81d2 transparent transparent; 
+}

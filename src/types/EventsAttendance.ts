@@ -1,11 +1,16 @@
+import { Event } from "../types/Events";
 export interface EventAttedance {
-  event: {
-    name: string;
-    date: string;
-  };
+  event: Event
   listTeacherAttendance: TeacherAttendance[];
   listStudentAttendance: StudentAttendance[];
   listGuestAttendancee: GuestAttendance[];
+}
+interface attendance {
+  idAttendance: number;
+  date: string;
+  isPresent: boolean;
+  isExit: boolean;
+  departureDate: string;
 }
 
 export interface TeacherAttendance {
@@ -13,13 +18,19 @@ export interface TeacherAttendance {
   firstName: string;
   lastName: string;
   mail: string;
+  dni:string;
+  gender:string;
+  attendance: attendance;
 }
 
 export interface StudentAttendance {
   idStudent: string;
+  dni: string;
   firstName: string;
   lastName: string;
   mail: string;
+  phone: String;
+  attendance: attendance;
 }
 
 export interface GuestAttendance {
@@ -27,4 +38,6 @@ export interface GuestAttendance {
   firstName: string;
   lastName: string;
   mail: string;
+  dni: string;
+  attendance: attendance;
 }

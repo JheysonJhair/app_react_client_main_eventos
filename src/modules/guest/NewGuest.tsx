@@ -7,6 +7,7 @@ import { addInvitedToEvent } from "../../services/Guest";
 
 export function NewGuest() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -38,6 +39,7 @@ export function NewGuest() {
 
     if (Object.values(validationErrors).every((error) => !error)) {
       try {
+        setLoading(true)
         const guestData = {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -62,6 +64,7 @@ export function NewGuest() {
             confirmButtonText: "Aceptar",
           });
         }
+        setLoading(false)
       } catch (error) {
         Swal.fire({
           icon: "error",
@@ -69,6 +72,7 @@ export function NewGuest() {
           text: "Hubo un error al crear el Invitado. Por favor, intente nuevamente.",
           confirmButtonText: "Aceptar",
         });
+        setLoading(false)
       }
     }
   };
@@ -97,7 +101,7 @@ export function NewGuest() {
           <div className="row">
             <div className="col-sm-3 d-flex flex-column align-items-center text-center">
               <img
-                src="../../assets/images/avatars/avatar-1.png"
+                src="../../assets/images/avatars/avatar-2.png"
                 alt="Estudiante"
                 className="p-1 bg-primary"
                 width={200}
@@ -277,9 +281,27 @@ export function NewGuest() {
                   <div className="row mt-2">
                   <div className="col"></div>
                   <div className="col-auto ml-auto">
-                    <button type="submit" className="btn btn-primary btn-block">
-                      <i className="bx bx-user-circle" /> Registrar Invitado
-                    </button>
+                  <button
+                        type="submit"
+                        className="btn btn-primary btn-block"
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          <>
+                            <span
+                              className="spinner-border spinner-border-sm"
+                              role="status"
+                              aria-hidden="true"
+                            />{" "}
+                            Registrando...
+                          </>
+                        ) : (
+                          <>
+                            <i className="bx bx-user-circle" /> Registrar
+                            invitado
+                          </>
+                        )}
+                      </button>
                   </div>
                 </div>
                 </div>

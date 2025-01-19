@@ -18,6 +18,7 @@ const AddParticipantsModal: React.FC<AddParticipantsModalProps> = ({
   const [dni, setDni] = useState("");
   const [participant, setParticipant] = useState<Participant | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
   const [error, setError] = useState("");
 
   //---------------------------------------------------------------- GET PARTICIPANT BY DNI
@@ -61,7 +62,7 @@ const AddParticipantsModal: React.FC<AddParticipantsModalProps> = ({
       });
       return;
     }
-    setLoading(true);
+    setLoading2(true);
     try {
       const result = await addParticipantToEvent(
         eventId,
@@ -86,7 +87,7 @@ const AddParticipantsModal: React.FC<AddParticipantsModalProps> = ({
         confirmButtonText: "Aceptar",
       });
 
-      setLoading(false);
+      setLoading2(false);
       onClose();
       window.location.reload();
     } catch (err) {
@@ -96,7 +97,7 @@ const AddParticipantsModal: React.FC<AddParticipantsModalProps> = ({
         text: "Ocurrió un error al intentar agregar al participante.",
         confirmButtonText: "Aceptar",
       });
-      setLoading(false);
+      setLoading2(false);
     }
   };
 
@@ -165,8 +166,9 @@ const AddParticipantsModal: React.FC<AddParticipantsModalProps> = ({
                   variant="primary"
                   style={{ marginTop: "10px", width: "100%" }}
                   onClick={handleAddParticipant}
-                >
-                  Agregar Participante
+                  disabled={loading2 || !dni}
+                  >
+                    {loading2 ? "Agregando..." : "Agregar"}
                 </Button>
               </div>
             </>

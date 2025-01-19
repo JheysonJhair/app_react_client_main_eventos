@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import CardEvent from "./components/CardEvent";
+import CardEvent from "./components/CardEvent/CardEvent";
 import { getAllEvents } from "../../services/EventService";
 import { Event } from "../../types/Events";
 import { Loading } from "../../components/ui/Loading";
@@ -13,21 +13,21 @@ export function EventAttendance() {
   const [endDate, setEndDate] = useState<string>("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await getAllEvents();
-        setEvents(response);
-        setFilteredEvents(response); 
-      } catch (err: any) {
-        console.error("Error fetching events:", err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+    useEffect(() => {
+      const fetchEvents = async () => {
+        try {
+          const response = await getAllEvents();
+          setEvents(response);
+          setFilteredEvents(response);
+        } catch (err: any) {
+          console.error("Error fetching events:", err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    fetchEvents();
-  }, []);
+      fetchEvents();
+    }, []);
 
   const handleCardClick = (id: number) => {
     navigate(`/attendance-event/${id}`);
@@ -39,13 +39,14 @@ export function EventAttendance() {
       const start = startDate ? new Date(startDate) : null;
       const end = endDate ? new Date(endDate) : null;
 
-      return (
-        (!start || eventDate == start) &&
-        (!end || eventDate == end)
-      );
+      if (end) {
+        end.setDate(end.getDate() + 1);
+      }
+
+      return (!start || eventDate >= start) && (!end || eventDate < end);
     });
 
-    setFilteredEvents(filtered); 
+    setFilteredEvents(filtered);
   };
 
   return (

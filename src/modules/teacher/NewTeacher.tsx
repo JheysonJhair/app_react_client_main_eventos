@@ -7,6 +7,7 @@ import { validateForm } from "../../utils/scheme/TeacherValidationsForm";
 
 export function NewTeacher() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -44,6 +45,7 @@ export function NewTeacher() {
 
     if (Object.values(validationErrors).every((error) => !error)) {
       try {
+        setLoading(true);
         const teacherData = {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -71,6 +73,7 @@ export function NewTeacher() {
             confirmButtonText: "Aceptar",
           });
         }
+        setLoading(false);
       } catch (error) {
         Swal.fire({
           icon: "error",
@@ -78,6 +81,7 @@ export function NewTeacher() {
           text: "Hubo un error al crear el docente. Por favor, intente nuevamente.",
           confirmButtonText: "Aceptar",
         });
+        setLoading(false);
       }
     }
   };
@@ -108,7 +112,7 @@ export function NewTeacher() {
               <img
                 src="../../assets/images/avatars/avatar-1.png"
                 alt="Docente"
-                className="p-1 bg-primary rounded-circle"
+                className="p-1 bg-primary"
                 width={200}
               />
             </div>
@@ -275,7 +279,9 @@ export function NewTeacher() {
                           />
                         </div>
                         {errors.birthDate && (
-                          <small className="text-danger">{errors.birthDate}</small>
+                          <small className="text-danger">
+                            {errors.birthDate}
+                          </small>
                         )}
                       </div>
                     </div>
@@ -405,13 +411,31 @@ export function NewTeacher() {
                     </div>
                   </div>
                   <div className="row mt-2">
-                  <div className="col"></div>
-                  <div className="col-auto ml-auto">
-                    <button type="submit" className="btn btn-primary btn-block">
-                      <i className="bx bx-user-circle" /> Registrar docente
-                    </button>
+                    <div className="col"></div>
+                    <div className="col-auto ml-auto">
+                      <button
+                        type="submit"
+                        className="btn btn-primary btn-block"
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          <>
+                            <span
+                              className="spinner-border spinner-border-sm"
+                              role="status"
+                              aria-hidden="true"
+                            />{" "}
+                            Registrando...
+                          </>
+                        ) : (
+                          <>
+                            <i className="bx bx-user-circle" /> Registrar
+                            docente
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
-                </div>
                 </div>
               </form>
             </div>

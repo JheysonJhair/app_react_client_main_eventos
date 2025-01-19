@@ -32,9 +32,9 @@ export function HomePage() {
   };
 
   const eventImages: { [key: number]: string } = {
-    0: "https://asesoriaentesis.edu.pe/wp-content/uploads/2023/11/1500x844-tesis-terminar-maestria.jpg",
+    0: "https://cdn.goconqr.com/uploads/media/image/29660408/desktop_50fb8cca-040d-4a46-8a44-83b47ae93438.jpeg",
     1: "https://alianzaestudiantil.org/wp-content/uploads/2022/03/conferencias-para-profesionales.jpg",
-    2: "https://www.revistaeyn.com/binrepository/1200x806/0c0/0d0/none/26086/UCYG/deportestodos_6294117_20231218170022.jpg",
+    2: "https://tesisymasters.com.co/wp-content/uploads/2022/08/imagenes-de-blog-13.jpg",
   };
 
   return (
@@ -65,8 +65,13 @@ export function HomePage() {
                     src={eventImages[event.eventTypeId]}
                     className="card-img-top"
                     alt={event.name}
-                    style={{ height: "180px", objectFit: "cover" }}
+                    style={{
+                      height: "180px",
+                      objectFit: "cover",
+                      width: "100%",
+                    }}
                   />
+
                   <div className="card-body d-flex flex-column">
                     <h5
                       className="card-title text-center mb-3"
@@ -90,7 +95,10 @@ export function HomePage() {
 
                     <div className="d-flex justify-content-between align-items-center mb-2">
                       <p className="card-text mb-0">
-                        <strong>Ubicación:</strong> {event.location}
+                        <strong>Ubicación:</strong>{" "}
+                        {event.location.length > 16
+                          ? `${event.location.substring(0, 16)}...`
+                          : event.location}
                       </p>
                       <small className="text-muted d-flex align-items-center mb-0">
                         {event.isPrivate ? (
@@ -115,7 +123,11 @@ export function HomePage() {
                         marginTop: "10px",
                       }}
                     >
-                      <p>{event.description}</p>
+                      <p>
+                        {event.description.length > 63
+                          ? `${event.description.substring(0, 63)}...`
+                          : event.description}
+                      </p>
                     </div>
                   </div>
                 </div>

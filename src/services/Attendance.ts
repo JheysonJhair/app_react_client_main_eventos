@@ -6,6 +6,8 @@ import { ApiResponse } from "../types/Response/Response";
 export const asistenciaEvent = async (eventData: {
   dni: string;
   eventId: number;
+  band: boolean;
+  isLate: boolean;
 }): Promise<ApiResponse<Participant>> => {
   try {
     const response = await fetch(

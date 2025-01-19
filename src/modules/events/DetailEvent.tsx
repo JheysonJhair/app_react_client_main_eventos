@@ -18,15 +18,18 @@ export function DetailEvent() {
 
   const [showAttendanceModal, setShowAttendanceModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
-  const [showAddParticipantsModal, setShowAddParticipantsModal] = useState(false);
+  const [showAddParticipantsModal, setShowAddParticipantsModal] =
+    useState(false);
   const [showAddInvitedModal, setShowAddInvitedModal] = useState(false);
 
   const handleOpenAttendanceModal = () => setShowAttendanceModal(true);
   const handleOpenViewModal = () => setShowViewModal(true);
   const handleCloseViewModal = () => setShowViewModal(false);
-  const handleOpenAddParticipantsModal = () =>setShowAddParticipantsModal(true);
+  const handleOpenAddParticipantsModal = () =>
+    setShowAddParticipantsModal(true);
   const handleOpenAddInvitedModal = () => setShowAddInvitedModal(true);
 
+  const [imageLoading, setImageLoading] = useState(true);
   const [loadingSpinner, setLoadingSpinner] = useState(true);
 
   const [eventData, setEventData] = useState<Event | null>(null);
@@ -35,23 +38,53 @@ export function DetailEvent() {
   //---------------------------------------------------------------- GET PARTICPANT AND EVENT
   useEffect(() => {
     const fetchEvent = async () => {
-      const event = await getEventById(Number(id));
-      setEventData(event);
-    };
-    const fetchParcipantEvent = async () => {
-      const participant = await getPartipantEventById(Number(id));
-      setParticipantData(participant);
-      setLoadingSpinner(false);
+      try {
+        const event = await getEventById(Number(id));
+        setEventData(event);
+      } catch (error) {
+        console.error("Error fetching event:", error);
+      }
     };
 
-    fetchParcipantEvent();
-    fetchEvent();
-  }, []);
+    const fetchParticipantEvent = async () => {
+      try {
+        const participant = await getPartipantEventById(Number(id));
+        setParticipantData(participant);
+      } catch (error) {
+        console.error("Error fetching participant event:", error);
+      } finally {
+        setLoadingSpinner(false);
+      }
+    };
+
+    const fetchData = () => {
+      fetchEvent();
+      fetchParticipantEvent();
+    };
+
+    fetchData();
+    const intervalId = setInterval(fetchData, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [id]);
+
+  const calculateDuration = (startTime: string, endTime: string) => {
+    const start = new Date(`1970-01-01T${startTime}:00`);
+    const end = new Date(`1970-01-01T${endTime}:00`);
+
+    const durationInMs = end.getTime() - start.getTime();
+
+    const durationInMinutes = durationInMs / (1000 * 60);
+    const hours = Math.floor(durationInMinutes / 60);
+    const minutes = Math.floor(durationInMinutes % 60);
+
+    return `${hours} horas ${minutes} minutos`;
+  };
 
   const eventImages: { [key: number]: string } = {
-    0: "https://asesoriaentesis.edu.pe/wp-content/uploads/2023/11/1500x844-tesis-terminar-maestria.jpg",
+    0: "https://cdn.goconqr.com/uploads/media/image/29660408/desktop_50fb8cca-040d-4a46-8a44-83b47ae93438.jpeg",
     1: "https://alianzaestudiantil.org/wp-content/uploads/2022/03/conferencias-para-profesionales.jpg",
-    2: "https://www.revistaeyn.com/binrepository/1200x806/0c0/0d0/none/26086/UCYG/deportestodos_6294117_20231218170022.jpg",
+    2: "https://tesisymasters.com.co/wp-content/uploads/2022/08/imagenes-de-blog-13.jpg",
   };
 
   return (
@@ -77,10 +110,18 @@ export function DetailEvent() {
         <div className="card border-primary border-bottom border-3 border-0">
           <div className="row g-0">
             <div className="col-md-4 border-end">
+              {imageLoading && <Loading />}{" "}
               <img
                 src={eventImages[eventData?.eventTypeId!]}
                 className="img-fluid"
                 alt="..."
+                onLoad={() => setImageLoading(false)}
+                style={{
+                  display: imageLoading ? "none" : "block",
+                  width: "100%",
+                  height: "auto",
+                  objectFit: "cover",
+                }}
               />
               <div className="row mb-3 row-cols-auto g-2 justify-content-center mt-3">
                 <div className="card-body d-flex flex-column">
@@ -106,10 +147,17 @@ export function DetailEvent() {
                     </small>
                   </div>
                   <div className="d-flex justify-content-between align-items-center mb-2">
-                    <p className="card-text mb-1">
-                      <strong>Duración:</strong> {eventData?.duration} horas
+                    <p className="card-text m-0">
+                      <strong>Duración:</strong>
+                      {eventData && eventData.startTime && eventData.endTime
+                        ? calculateDuration(
+                            eventData.startTime,
+                            eventData.endTime
+                          )
+                        : "Duración no disponible"}
                     </p>
                   </div>
+
                   <div
                     className="card-text text-justify"
                     style={{
@@ -127,7 +175,10 @@ export function DetailEvent() {
             </div>
             <div className="col-md-8">
               <div className="card-body">
-                <h2 className="card-title">{eventData?.name}</h2>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h2 className="card-title">{eventData?.name}</h2>
+                  <button className="btn btn-danger">Cerrar Evento</button>
+                </div>
                 <div className="gap-3">
                   <div className="cursor-pointer">
                     <i className="bx bxs-star text-warning"></i>
@@ -136,7 +187,14 @@ export function DetailEvent() {
                     <i className="bx bxs-star text-warning"></i>
                     <i className="bx bxs-star text-warning"></i>
                   </div>
-                  <div>{participantData.filter((participant) => participant.role === 2).length} Participantes invitados</div>
+                  <div>
+                    {
+                      participantData.filter(
+                        (participant) => participant.role === 2
+                      ).length
+                    }{" "}
+                    Participantes invitados
+                  </div>
                 </div>
                 <hr />
                 <div className="row">
@@ -200,6 +258,7 @@ export function DetailEvent() {
                     <button
                       className="btn btn-outline-primary"
                       onClick={handleOpenAddParticipantsModal}
+                      disabled={eventData?.isPrivate}
                     >
                       <span className="text">Agregar Participantes</span>
                       <i className="bx bxs-user"></i>
@@ -227,6 +286,8 @@ export function DetailEvent() {
         show={showAttendanceModal}
         onHide={() => setShowAttendanceModal(false)}
         eventId={id}
+        startTime={eventData?.startTime}
+        endTime={eventData?.endTime}
       />
 
       <AttendeesModal
