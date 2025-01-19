@@ -71,20 +71,21 @@ export function EventAttendanceDetail() {
   ) => {
     const eventStart = new Date(startTime).getTime();
     const eventEnd = new Date(endTime).getTime();
-    const [durationMinutes] = duration.split(" ").map(Number);
-
-    const durationInMinutes = durationMinutes;
+    const [durationHours, durationMinutes] = duration.split(" ").map(Number);
+  
+    const totalDurationInMinutes = durationHours * 60 + durationMinutes;
     const tolerance = 15;
 
-    if (
-      durationInMinutes <=
-      (eventEnd - eventStart) / (1000 * 60) + tolerance
-    ) {
+    const effectiveDuration = (eventEnd - eventStart) / (1000 * 60) - tolerance;
+  
+    if (totalDurationInMinutes >= effectiveDuration) {
       return "Aceptado";
     } else {
       return "Rechazado";
     }
   };
+  
+  
 
   const exportToExcel = () => {
     const data = [
@@ -379,7 +380,6 @@ export function EventAttendanceDetail() {
                     <th>Dni</th>
                     <th>Nombres y apellidos</th>
                     <th>Email</th>
-                    <th>Genero</th>
                     <th>Hora de entrada</th>
                     <th>Hora de salida</th>
                     <th>Duracion de asistencia</th>
