@@ -41,6 +41,11 @@ function AppLayout() {
     loadScripts();
   }, []);
 
+  const whatsappLink = `https://wa.me/51${966267857}?text=${encodeURIComponent(
+    "Soporte Técnico"
+  )}`;
+
+
   //---------------------------------------------------------------- HANDLE LOGOUT
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -197,7 +202,7 @@ function AppLayout() {
 
             <li>
               <a
-                href="https://www.linkedin.com/in/jheysonjhairpro/"
+                href={whatsappLink}
                 target="_blank"
               >
                 <div className="parent-icon">
