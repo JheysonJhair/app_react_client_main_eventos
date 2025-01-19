@@ -194,3 +194,31 @@ export const addParticipantToEvent = async (
 };
 
 
+//---------------------------------------------------------------- CLOSE EVENT
+export const deleteEvent = async (id: number): Promise<ApiResponse<null>> => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/Event/CloseEvent/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al eliminar el evento");
+    }
+
+    const data: ApiResponse<null> = await response.json();
+    if (!data.success) {
+      throw new Error(data.message);
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error en deleteEvent:", error);
+    throw error;
+  }
+};

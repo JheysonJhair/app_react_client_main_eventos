@@ -43,3 +43,7 @@
   border-width: 0 110px 110px 0; 
   border-color: transparent #2a81d2 transparent transparent; 
 }
+.disabled-card {
+  pointer-events: none;
+  opacity: 0.6;
+}

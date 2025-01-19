@@ -9,5 +9,6 @@ export interface Event {
   isPrivate: boolean;
   description: string;
   eventTypeId: number;
+  isOpen?:boolean;
   attendances?: Attendance[];
 }

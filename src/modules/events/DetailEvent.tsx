@@ -6,12 +6,15 @@ import AddParticipantsModal from "./components/AddParticipantsModal/AddParticipa
 import AttendeesModal from "./components/AttendeesModal/AttendeesModal";
 import { Event } from "../../types/Events";
 import {
+  deleteEvent,
   getEventById,
   getPartipantEventById,
 } from "../../services/EventService";
 import { Loading } from "../../components/ui/Loading";
 import AttendanceModal from "./components/AttendanceModal/AttendanceModal";
 import AddInvitedModal from "./components/AddInvitedModal/AddInvitedModal";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export function DetailEvent() {
   const { id } = useParams<{ id: string }>();
@@ -34,7 +37,7 @@ export function DetailEvent() {
 
   const [eventData, setEventData] = useState<Event | null>(null);
   const [participantData, setParticipantData] = useState<Participant[]>([]);
-
+  const navigate = useNavigate();
   //---------------------------------------------------------------- GET PARTICPANT AND EVENT
   useEffect(() => {
     const fetchEvent = async () => {
@@ -79,6 +82,37 @@ export function DetailEvent() {
     const minutes = Math.floor(durationInMinutes % 60);
 
     return `${hours} horas ${minutes} minutos`;
+  };
+
+  //---------------------------------------------------------------- DELETE EVENT
+  const handleCloseEvent = async () => {
+    try {
+      const response = await deleteEvent(Number(id));
+      console.log(response);
+      if (response.success) {
+        Swal.fire({
+          icon: "success",
+          title: "¡Evento deshabilitado!",
+          text: response.message,
+          confirmButtonText: "Aceptar",
+        });
+        navigate("/");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: response.message,
+          confirmButtonText: "Aceptar",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Opps, Algo salio mal",
+        confirmButtonText: "Aceptar",
+      });
+    }
   };
 
   const eventImages: { [key: number]: string } = {
@@ -127,7 +161,8 @@ export function DetailEvent() {
                 <div className="card-body d-flex flex-column">
                   <div className="d-flex justify-content-between mb-2">
                     <p className="m-0">
-                      <strong>Fecha:</strong> {new Date(eventData?.date!).toLocaleDateString()}
+                      <strong>Fecha:</strong>{" "}
+                      {new Date(eventData?.date!).toLocaleDateString()}
                     </p>
                     <small className="text-muted">{eventData?.startTime}</small>
                   </div>
@@ -177,7 +212,13 @@ export function DetailEvent() {
               <div className="card-body">
                 <div className="d-flex justify-content-between align-items-center">
                   <h2 className="card-title">{eventData?.name}</h2>
-                  <button className="btn btn-danger">Cerrar Evento</button>
+                  <button
+                    disabled={eventData?.isOpen == false}
+                    className="btn btn-danger"
+                    onClick={handleCloseEvent}
+                  >
+                    Cerrar Evento
+                  </button>
                 </div>
                 <div className="gap-3">
                   <div className="cursor-pointer">
@@ -235,6 +276,7 @@ export function DetailEvent() {
                   <button
                     className="btn btn-primary"
                     onClick={handleOpenAttendanceModal}
+                    disabled={eventData?.isOpen == false}
                   >
                     Tomar Asistencia
                   </button>
@@ -243,6 +285,7 @@ export function DetailEvent() {
                     <button
                       className="btn btn-outline-primary"
                       onClick={handleOpenViewModal}
+                      disabled={eventData?.isOpen == false}
                     >
                       <span className="text">Ver Asistentes</span>
                       <i className="bx bxs-user"></i>
@@ -250,6 +293,7 @@ export function DetailEvent() {
                     <button
                       className="btn btn-outline-primary"
                       onClick={handleOpenAddInvitedModal}
+                      disabled={eventData?.isOpen == false}
                     >
                       <span className="text">Agregar Invitado</span>
                       <i className="bx bxs-user"></i>
@@ -257,6 +301,7 @@ export function DetailEvent() {
                     <button
                       className="btn btn-outline-primary"
                       onClick={handleOpenAddParticipantsModal}
+                      disabled={eventData?.isOpen == false}
                     >
                       <span className="text">Agregar Participantes</span>
                       <i className="bx bxs-user"></i>

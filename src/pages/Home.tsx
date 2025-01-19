@@ -47,10 +47,12 @@ export function HomePage() {
           <Loading />
         ) : events && events.length > 0 ? (
           <div className="row">
-            {events.map((event) => (
+            {events.reverse().map((event) => (
               <div
                 key={event.idEvent}
-                className="col-md-3 mb-4"
+                className={`col-md-3 mb-4 ${
+                  !event.isOpen ? "disabled-card" : ""
+                }`}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "scale(1.05)";
                 }}
@@ -58,7 +60,7 @@ export function HomePage() {
                   e.currentTarget.style.transform = "scale(1)";
                 }}
                 onClick={() => handleCardClick(event.idEvent)}
-                style={{ cursor: "pointer" }}
+                style={{ cursor: event.isOpen ? "pointer" : "not-allowed" }}
               >
                 <div className="card border-primary border-bottom border-3 border-0">
                   <img
