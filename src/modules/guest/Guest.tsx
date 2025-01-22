@@ -43,10 +43,10 @@ export function Guests() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getAllGuest();
-      if(data == null){
+      if (data == null) {
         setGuest([]);
-      }else{
-        setGuest(data)
+      } else {
+        setGuest(data);
       }
       setLoading(false);
     };
@@ -74,9 +74,7 @@ export function Guests() {
           throw new Error(response.message);
         }
 
-        const updatedGuest = guest.filter(
-          (guest) => guest.idGuest !== id
-        );
+        const updatedGuest = guest.filter((guest) => guest.idGuest !== id);
         setGuest(updatedGuest);
         await Swal.fire("¡Eliminado!", response.message, "success");
       }
@@ -107,18 +105,14 @@ export function Guests() {
       }
 
       try {
-        console.log(selectedGuest)
-        const response = await actualizarGuest(
-          selectedGuest
-        );
+        console.log(selectedGuest);
+        const response = await actualizarGuest(selectedGuest);
         if (!response.success) {
           throw new Error(response.message);
         }
         setGuest(
           guest.map((user) =>
-            user.idGuest === selectedGuest.idGuest
-              ? selectedGuest
-              : user
+            user.idGuest === selectedGuest.idGuest ? selectedGuest : user
           )
         );
         Swal.fire("Actualizado", response.message, "success");
@@ -135,6 +129,23 @@ export function Guests() {
   return (
     <div className="page-wrapper">
       <div className="page-content">
+        <div className="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+          <div className="breadcrumb-title pe-3">Invitados</div>
+          <div className="ps-3">
+            <nav aria-label="breadcrumb">
+              <ol className="breadcrumb mb-0 p-0">
+                <li className="breadcrumb-item">
+                  <a href="#">
+                    <i className="bx bx-home-alt" />
+                  </a>
+                </li>
+                <li className="breadcrumb-item active" aria-current="page">
+                  Todos los invitados
+                </li>
+              </ol>
+            </nav>
+          </div>
+        </div>
         <div className="mb-3">
           <input
             type="text"
@@ -184,9 +195,7 @@ export function Guests() {
                       </button>
                       <button
                         className="btn btn-danger btn-sm"
-                        onClick={() =>
-                          handleDeleteGuest(guest.idGuest || 0)
-                        }
+                        onClick={() => handleDeleteGuest(guest.idGuest || 0)}
                       >
                         <FaTrash />
                       </button>

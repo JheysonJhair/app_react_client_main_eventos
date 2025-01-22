@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import CardEvent from "./components/CardEvent/CardEvent";
-import { getAllEvents } from "../../services/EventService";
-import { Event } from "../../types/Events";
-import { Loading } from "../../components/ui/Loading";
+import CardEvent from "../components/CardEvent/CardEvent";
+import { getAllEvents } from "../../../services/EventService";
+import { Event } from "../../../types/Events";
+import { Loading } from "../../../components/ui/Loading";
 
 export function EventAttendance() {
   const [events, setEvents] = useState<Event[]>([]);

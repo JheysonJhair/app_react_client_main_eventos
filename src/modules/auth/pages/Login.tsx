@@ -37,8 +37,8 @@ export default function Login() {
     if (username === "admin" && password === "12345678") {
       const response = {
         data: {
-          firstName: "Jhair",
-          lastName: "Arone Angeles",
+          firstName: "ADMINISTRADOR",
+          lastName: "EPIIS",
           role: 0,
           isPresent: true,
         },

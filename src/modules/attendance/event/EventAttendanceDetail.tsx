@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getReportAttedanceEventById } from "../../services/EventServiceDetail";
-import { Loading } from "../../components/ui/Loading";
+import { getReportAttedanceEventById } from "../../../services/EventServiceDetail";
+import { Loading } from "../../../components/ui/Loading";
 import {
   EventAttedance,
   TeacherAttendance,
   StudentAttendance,
   GuestAttendance,
-} from "../../types/EventsAttendance";
+} from "../../../types/EventsAttendance";
 import * as XLSX from "xlsx";
 
 export function EventAttendanceDetail() {
@@ -183,7 +183,7 @@ export function EventAttendanceDetail() {
                     </a>
                   </li>
                   <li className="breadcrumb-item active" aria-current="page">
-                    Sus asistencias
+                    Asistencias
                   </li>
                 </ol>
               </nav>

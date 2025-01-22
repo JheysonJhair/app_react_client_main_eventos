@@ -45,7 +45,6 @@ function AppLayout() {
     "Soporte Técnico"
   )}`;
 
-
   //---------------------------------------------------------------- HANDLE LOGOUT
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -130,20 +129,9 @@ function AppLayout() {
                     Docentes
                   </NavLink>
                 </li>
-                <li>
-                  <NavLink to="/teachers-assistance/">
-                    <i className="bx bx-radio-circle" />
-                    Asistencias
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/teachers-assistance/">
-                    <i className="bx bx-radio-circle" />
-                    Tomar Asistencia
-                  </NavLink>
-                </li>
               </ul>
             </li>
+
             <li>
               <a className="has-arrow" href="#">
                 <div className="parent-icon">
@@ -190,21 +178,48 @@ function AppLayout() {
                 </li>
               </ul>
             </li>
+            <li className="menu-label">Gestion de Asistencias</li>
+            <li>
+              <a className="has-arrow" href="#">
+                <div className="parent-icon">
+                  <i className="bx bx-fingerprint" />
+                </div>
+                <div className="menu-title">Asistencias</div>
+              </a>
+
+              <ul>
+                <li>
+                  <NavLink to="/register-teacher-fingerprint/">
+                    <i className="bx bx-radio-circle" />
+                    Registrar Huella
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/teachers-assistance/">
+                    <i className="bx bx-radio-circle" />
+                    Tomar Asistencia
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/teacher-attendance-report/">
+                    <i className="bx bx-radio-circle" />
+                    Reporte
+                  </NavLink>
+                </li>
+              </ul>
+            </li>
             <li className="menu-label">Informes &amp; Gráficos</li>
             <li>
               <NavLink to="/reports/">
                 <div className="parent-icon">
-                  <i className="bx bx-table" />
+                  <i className="bx bx-bar-chart" />
                 </div>
-                <div className="menu-title">Inventario</div>
+                <div className="menu-title">Reportes graficos</div>
               </NavLink>
             </li>
 
             <li>
-              <a
-                href={whatsappLink}
-                target="_blank"
-              >
+              <a href={whatsappLink} target="_blank">
                 <div className="parent-icon">
                   <i className="bx bx-support" />
                 </div>

@@ -1,4 +1,4 @@
-import { FaLock, FaUnlock } from "react-icons/fa";
+import { FaLock, FaUnlock, FaUserLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Event } from "../types/Events";
 import { useEffect, useState } from "react";
@@ -54,15 +54,22 @@ export function HomePage() {
                   !event.isOpen ? "disabled-card" : ""
                 }`}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "scale(1.05)";
+                  if (event.isOpen)
+                    e.currentTarget.style.transform = "scale(1.05)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "scale(1)";
+                  if (event.isOpen)
+                    e.currentTarget.style.transform = "scale(1)";
                 }}
-                onClick={() => handleCardClick(event.idEvent)}
+                onClick={() => event.isOpen && handleCardClick(event.idEvent)}
                 style={{ cursor: event.isOpen ? "pointer" : "not-allowed" }}
               >
                 <div className="card border-primary border-bottom border-3 border-0">
+                  {!event.isOpen && (
+                    <div className="lock-overlay">
+                      <FaUserLock className="lock-icon" />
+                    </div>
+                  )}
                   <img
                     src={eventImages[event.eventTypeId]}
                     className="card-img-top"
@@ -89,8 +96,7 @@ export function HomePage() {
                     </h5>
                     <div className="d-flex justify-content-between">
                       <p className="m-0">
-                        <strong>Fecha:</strong>
-                        {formatDate(event.date)}
+                        <strong>Fecha:</strong> {formatDate(event.date)}
                       </p>
                       <small className="text-muted">{event.startTime}</small>
                     </div>
@@ -120,7 +126,7 @@ export function HomePage() {
                       style={{
                         borderTop: "1px solid #ddd",
                         paddingTop: "10px",
-                        maxHeight: "100px",
+                        height: "100px",
                         overflowY: "auto",
                         marginTop: "10px",
                       }}

@@ -278,7 +278,8 @@ export function DetailEvent() {
                     onClick={handleOpenAttendanceModal}
                     disabled={eventData?.isOpen == false}
                   >
-                    Tomar Asistencia
+                    <span className="text">Tomar Asistencia</span>
+                    <i className="bx bx-barcode" />
                   </button>
 
                   <div className="d-flex gap-3">

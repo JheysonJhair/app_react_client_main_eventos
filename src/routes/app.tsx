@@ -9,13 +9,14 @@ import { NewEvent } from "../modules/events/NewEvent";
 import DetailEvent from "../modules/events/DetailEvent";
 import { NewStudent } from "../modules/student/NewStudent";
 import { Students } from "../modules/student/Student";
-import { EventAttendance } from "../modules/attendance/EventAttendance";
+import { EventAttendance } from "../modules/attendance/event/EventAttendance";
 import ProtectedRoute from "../components/ProtectedRoute ";
-import TeachersAssistance from "../modules/attendance/TeachersAssistance";
+import TeachersAssistance from "../modules/attendance/fingerprint/TeachersAssistance";
 import { Guests } from "../modules/guest/Guest";
 import { NewGuest } from "../modules/guest/NewGuest";
-import { EventAttendanceDetail } from "../modules/attendance/EventAttendanceDetail";
-
+import { EventAttendanceDetail } from "../modules/attendance/event/EventAttendanceDetail";
+import { RegisterFootprint } from "../modules/attendance/fingerprint/RegisterFootprint";
+import { ReportAttendanceTeacher } from "../modules/attendance/fingerprint/ReportAttendanceTeacher";
 
 const appRouter = [
   {
@@ -47,6 +48,19 @@ const appRouter = [
         path: "/attendance-event/:id",
         element: <EventAttendanceDetail />,
       },
+      //Footprint
+      {
+        path: "/register-teacher-fingerprint/",
+        element: <RegisterFootprint />,
+      },
+      {
+        path: "/teachers-assistance/",
+        element: <TeachersAssistance />,
+      },
+      {
+        path: "/teacher-attendance-report/",
+        element: <ReportAttendanceTeacher />,
+      },
       //Teacher
       {
         path: "/teacher/",
@@ -55,10 +69,6 @@ const appRouter = [
       {
         path: "/new-teacher/",
         element: <NewTeacher />,
-      },
-      {
-        path: "/teachers-assistance/",
-        element: <TeachersAssistance />,
       },
       //Student
       {
