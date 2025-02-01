@@ -4,7 +4,6 @@ import Swal from "sweetalert2";
 import { validateForm } from "../../utils/scheme/UserValidationsForm";
 import { createUser } from "../../services/User";
 
-
 export function NewUser() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
@@ -53,7 +52,7 @@ export function NewUser() {
           mail: formData.mail,
           nameUser: formData.nameUser,
           phone: formData.phone,
-          gender:formData.gender === "Masculino" ? true : false,
+          gender: formData.gender === "Masculino" ? true : false,
           dni: formData.dni,
           password: formData.password,
         };
@@ -158,9 +157,7 @@ export function NewUser() {
                           />
                         </div>
                         {errors.name && (
-                          <small className="text-danger">
-                            {errors.name}
-                          </small>
+                          <small className="text-danger">{errors.name}</small>
                         )}
                       </div>
                     </div>
@@ -281,7 +278,9 @@ export function NewUser() {
                           />
                         </div>
                         {errors.nameUser && (
-                          <small className="text-danger">{errors.nameUser}</small>
+                          <small className="text-danger">
+                            {errors.nameUser}
+                          </small>
                         )}
                       </div>
                     </div>
@@ -450,7 +449,6 @@ export function NewUser() {
                         )}
                       </div>
                     </div>
-
                   </div>
                   <div className="row mt-2">
                     <div className="col"></div>
@@ -471,9 +469,8 @@ export function NewUser() {
                           </>
                         ) : (
                           <>
-                           <i className="bx bx-user-plus" />
-                           Registrar
-                            usuario
+                            <i className="bx bx-user-check" />
+                            Registrar usuario
                           </>
                         )}
                       </button>

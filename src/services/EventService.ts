@@ -193,9 +193,8 @@ export const addParticipantToEvent = async (
   }
 };
 
-
 //---------------------------------------------------------------- CLOSE EVENT
-export const deleteEvent = async (id: number): Promise<ApiResponse<null>> => {
+export const closeEvent = async (id: number): Promise<ApiResponse<null>> => {
   try {
     const response = await fetch(
       `${import.meta.env.VITE_API_URL}/Event/CloseEvent/${id}`,
@@ -219,6 +218,65 @@ export const deleteEvent = async (id: number): Promise<ApiResponse<null>> => {
     return data;
   } catch (error) {
     console.error("Error en deleteEvent:", error);
+    throw error;
+  }
+};
+
+//---------------------------------------------------------------- DELETE EVENT
+export const DeleteEvent = async (id: number): Promise<ApiResponse<null>> => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/Event/DeleteEvent/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al eliminar el evento");
+    }
+
+    const data: ApiResponse<null> = await response.json();
+    if (!data.success) {
+      throw new Error(data.message);
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error en deleteEvent:", error);
+    throw error;
+  }
+};
+
+//---------------------------------------------------------------- UPDATE EVENT
+export const updateEvent = async (updatedEvent: Event): Promise<ApiResponse<null>> => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/Event/UpdateEvent`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedEvent),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al actualizar el evento");
+    }
+
+    const data: ApiResponse<null> = await response.json();
+    if (!data.success) {
+      throw new Error(data.message);
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error en updateEvent:", error);
     throw error;
   }
 };

@@ -8,7 +8,7 @@ function AppLayout() {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    
+
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -121,29 +121,6 @@ function AppLayout() {
             <li>
               <a className="has-arrow" href="#">
                 <div className="parent-icon">
-                <i className="bx bx-user-plus" />
-                </div>
-                <div className="menu-title">Usuarios</div>
-              </a>
-
-              <ul>
-                <li>
-                  <NavLink to="/new-user/">
-                    <i className="bx bx-radio-circle" />
-                    Crear Usuario
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/users/">
-                    <i className="bx bx-radio-circle" />
-                    Usuarios
-                  </NavLink>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a className="has-arrow" href="#">
-                <div className="parent-icon">
                   <i className="bx bx-user-voice" />
                 </div>
                 <div className="menu-title">Docentes</div>
@@ -236,6 +213,30 @@ function AppLayout() {
                   <NavLink to="/teacher-attendance-report/">
                     <i className="bx bx-radio-circle" />
                     Reporte
+                  </NavLink>
+                </li>
+              </ul>
+            </li>
+            <li className="menu-label">Administradores</li>
+            <li>
+              <a className="has-arrow" href="#">
+                <div className="parent-icon">
+                  <i className="bx bx-user-check" />
+                </div>
+                <div className="menu-title">Usuarios</div>
+              </a>
+
+              <ul>
+                <li>
+                  <NavLink to="/new-user/">
+                    <i className="bx bx-radio-circle" />
+                    Crear Usuario
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/users/">
+                    <i className="bx bx-radio-circle" />
+                    Usuarios
                   </NavLink>
                 </li>
               </ul>

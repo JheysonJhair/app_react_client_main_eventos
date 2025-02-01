@@ -302,6 +302,7 @@ export function NewEvent() {
                           <option value="0">Tegnologico</option>
                           <option value="1">Conferencia</option>
                           <option value="2">Tesis</option>
+                          <option value="3">Reuniones</option>
                         </select>
                         {errors.eventTypeId && (
                           <small className="text-danger">

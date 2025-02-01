@@ -67,7 +67,7 @@ export const actualizarTeacher = async (
   teacher: Partial<Teacher>
 ): Promise<ApiResponse<Teacher>> => {
   try {
-    const url = `${import.meta.env.VITE_API_URL}/UpdateTeacher`;
+    const url = `${import.meta.env.VITE_API_URL}/Teacher/UpdateTeacher`;
     const response = await fetch(url, {
       method: "PUT",
       headers: {
@@ -90,7 +90,7 @@ export const eliminarTeacher = async (
   teacherId: number
 ): Promise<ApiResponse<null>> => {
   try {
-    const url = `${import.meta.env.VITE_API_URL}/DeleteTeacher/${teacherId}`;
+    const url = `${import.meta.env.VITE_API_URL}/Teacher/DeleteTeacher/${teacherId}`;
     const response = await fetch(url, {
       method: "DELETE",
     });

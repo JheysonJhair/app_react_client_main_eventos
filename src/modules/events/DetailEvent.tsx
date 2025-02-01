@@ -6,7 +6,7 @@ import AddParticipantsModal from "./components/AddParticipantsModal/AddParticipa
 import AttendeesModal from "./components/AttendeesModal/AttendeesModal";
 import { Event } from "../../types/Events";
 import {
-  deleteEvent,
+  closeEvent,
   getEventById,
   getPartipantEventById,
 } from "../../services/EventService";
@@ -87,7 +87,7 @@ export function DetailEvent() {
   //---------------------------------------------------------------- DELETE EVENT
   const handleCloseEvent = async () => {
     try {
-      const response = await deleteEvent(Number(id));
+      const response = await closeEvent(Number(id));
       console.log(response);
       if (response.success) {
         Swal.fire({
@@ -119,6 +119,7 @@ export function DetailEvent() {
     0: "https://cdn.goconqr.com/uploads/media/image/29660408/desktop_50fb8cca-040d-4a46-8a44-83b47ae93438.jpeg",
     1: "https://alianzaestudiantil.org/wp-content/uploads/2022/03/conferencias-para-profesionales.jpg",
     2: "https://tesisymasters.com.co/wp-content/uploads/2022/08/imagenes-de-blog-13.jpg",
+    3: "https://www.google.com/url?sa=j&url=https%3A%2F%2Fwww.axiateam.com%2Fwp-content%2Fuploads%2F2022%2F02%2FT%25C3%25A9cnicas-eficaces-para-la-gestion-de-reuniones2.jpg&uct=1715373134&usg=CK5nxLL9BxvCpwzpAvQRYw2zkHs.&opi=76390225&source=meet",
   };
 
   return (
