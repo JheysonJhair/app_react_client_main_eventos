@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Event } from "../types/Events";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   DeleteEvent,
   getAllEvents,
@@ -125,7 +125,7 @@ export function HomePage() {
     2: "https://tesisymasters.com.co/wp-content/uploads/2022/08/imagenes-de-blog-13.jpg",
     3: "https://www.google.com/url?sa=j&url=https%3A%2F%2Fwww.axiateam.com%2Fwp-content%2Fuploads%2F2022%2F02%2FT%25C3%25A9cnicas-eficaces-para-la-gestion-de-reuniones2.jpg&uct=1715373134&usg=CK5nxLL9BxvCpwzpAvQRYw2zkHs.&opi=76390225&source=meet",
   };
-
+  const reversedEvents = useMemo(() => [...events].reverse(), [events]);
   return (
     <div className="page-wrapper">
       <div className="page-content">
@@ -136,7 +136,7 @@ export function HomePage() {
           <Loading />
         ) : events && events.length > 0 ? (
           <div className="row">
-            {events.reverse().map((event) => (
+            {reversedEvents.map((event: any) => (
               <div
                 key={event.idEvent}
                 className={`col-md-3 mb-4 ${
@@ -311,7 +311,23 @@ export function HomePage() {
                   }
                 />
               </div>
-
+              <div className="form-group">
+                <label htmlFor="eventDate">Fecha del Evento</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  id="eventDate"
+                  defaultValue={
+                    eventToEdit.date ? eventToEdit.date.split("T")[0] : ""
+                  }
+                  onChange={(e) =>
+                    setEventToEdit({
+                      ...eventToEdit,
+                      date: e.target.value,
+                    })
+                  }
+                />
+              </div>
               <div className="form-group">
                 <label htmlFor="eventStartTime">Hora de Inicio</label>
                 <input
@@ -326,6 +342,38 @@ export function HomePage() {
                     })
                   }
                 />
+              </div>
+              <div className="form-group">
+                <label htmlFor="eventStartTime">Hora de Fin</label>
+                <input
+                  type="time"
+                  className="form-control"
+                  id="eventStartTime"
+                  defaultValue={eventToEdit.endTime}
+                  onChange={(e) =>
+                    setEventToEdit({
+                      ...eventToEdit,
+                      endTime: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="eventType">Estado</label>
+                <select
+                  className="form-control"
+                  id="eventType"
+                  defaultValue={eventToEdit.eventTypeId}
+                  onChange={(e) =>
+                    setEventToEdit({
+                      ...eventToEdit,
+                      eventTypeId: parseInt(e.target.value),
+                    })
+                  }
+                >
+                  <option value={0}>Público</option>
+                  <option value={1}>Privado</option>
+                </select>
               </div>
               <div className="form-group">
                 <label htmlFor="eventType">Tipo de Evento</label>
