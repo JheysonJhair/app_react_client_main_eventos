@@ -1,3 +1,5 @@
+import { User } from "./User";
+
 export interface Participant {
   idTeacher: number;
   idStudent: number;
@@ -24,6 +26,6 @@ export interface Invitado {
   dni: string;
 }
 export interface AuthContextType {
-  user: ParticipantAttendance | null;
-  setUser: (user: ParticipantAttendance | null) => void;
+  user: User | null;
+  setUser: (user: User | null) => void;
 }

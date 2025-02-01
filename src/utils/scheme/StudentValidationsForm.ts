@@ -25,7 +25,11 @@ export const validateForm = (formData: any) => {
     errors.phone = "";
   }
 
-  errors.gender = formData.gender ? "" : "Seleccione un género";
+  errors.gender =
+  formData.gender === "Masculino" || formData.gender === "Femenino"|| formData.gender == true || formData.gender == false
+    ? ""
+    : "Seleccione un género válido";
+
   errors.code = formData.code ? "" : "Ingrese un codigo";
   errors.birthDate = formData.birthDate ? "" : "Ingrese una fecha";
 

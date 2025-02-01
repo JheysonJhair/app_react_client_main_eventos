@@ -17,6 +17,8 @@ import { NewGuest } from "../modules/guest/NewGuest";
 import { EventAttendanceDetail } from "../modules/attendance/event/EventAttendanceDetail";
 import { RegisterFootprint } from "../modules/attendance/fingerprint/RegisterFootprint";
 import { ReportAttendanceTeacher } from "../modules/attendance/fingerprint/ReportAttendanceTeacher";
+import { Users } from "../modules/user/Users";
+import { NewUser } from "../modules/user/NewUser";
 
 const appRouter = [
   {
@@ -60,6 +62,15 @@ const appRouter = [
       {
         path: "/teacher-attendance-report/",
         element: <ReportAttendanceTeacher />,
+      },
+      //Teacher
+      {
+        path: "/users/",
+        element: <Users />,
+      },
+      {
+        path: "/new-user/",
+        element: <NewUser />,
       },
       //Teacher
       {

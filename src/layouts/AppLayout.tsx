@@ -1,8 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
+import { User } from "../types/User";
 
 function AppLayout() {
   const navigate = useNavigate();
+  const [user, setUser] = useState<User>();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
   // ---------------------------------------------------------------- SCRIPTS
   useEffect(() => {
     const scriptPaths = [
@@ -111,6 +121,29 @@ function AppLayout() {
             <li>
               <a className="has-arrow" href="#">
                 <div className="parent-icon">
+                <i className="bx bx-user-plus" />
+                </div>
+                <div className="menu-title">Usuarios</div>
+              </a>
+
+              <ul>
+                <li>
+                  <NavLink to="/new-user/">
+                    <i className="bx bx-radio-circle" />
+                    Crear Usuario
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/users/">
+                    <i className="bx bx-radio-circle" />
+                    Usuarios
+                  </NavLink>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a className="has-arrow" href="#">
+                <div className="parent-icon">
                   <i className="bx bx-user-voice" />
                 </div>
                 <div className="menu-title">Docentes</div>
@@ -131,7 +164,6 @@ function AppLayout() {
                 </li>
               </ul>
             </li>
-
             <li>
               <a className="has-arrow" href="#">
                 <div className="parent-icon">
@@ -252,7 +284,7 @@ function AppLayout() {
                     alt="user avatar"
                   />
                   <div className="user-info">
-                    <p className="user-name mb-0">D.C EPIIS</p>
+                    <p className="user-name mb-0">{user?.name}</p>
                     <p className="designattion mb-0">ADMINISTRADOR</p>
                   </div>
                 </a>

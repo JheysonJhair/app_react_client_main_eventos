@@ -1,8 +1,9 @@
-export const validateForm = (formData: any) => {
+export const validateForm = (formData: any, isUpdate: boolean = false) => {
   const errors: any = {};
 
-  errors.firstName = formData.firstName ? "" : "Este campo es obligatorio";
+  errors.name = formData.name ? "" : "Este campo es obligatorio";
   errors.lastName = formData.lastName ? "" : "Este campo es obligatorio";
+  errors.nameUser = formData.nameUser ? "" : "Este campo es obligatorio";
   if (!formData.dni) {
     errors.dni = "Este campo es obligatorio";
   } else if (!/^\d{8}$/.test(formData.dni)) {
@@ -29,6 +30,17 @@ export const validateForm = (formData: any) => {
   formData.gender === "Masculino" || formData.gender === "Femenino"|| formData.gender == true || formData.gender == false
     ? ""
     : "Seleccione un género válido";
-  errors.birthDate = formData.birthDate ? "" : "Ingrese una fecha";
+
+
+  if (!isUpdate) {
+    if (!formData.password) {
+      errors.password = "Este campo es obligatorio";
+    } else if (!/^\d{8,}$/.test(formData.password)) {
+      errors.password = "El password debe tener al menos 8 dígitos numéricos";
+    } else {
+      errors.password = "";
+    }
+  }
+
   return errors;
 };
